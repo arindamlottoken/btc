@@ -757,6 +757,7 @@ async function listenForClicks (miniToken, web3) {
 	    } else { 
 
 		
+		console.log("got utxos = "+utxos)
 		var tx2msig = new bitcore.Transaction()
 		tx2msig.from(utxos)
 		tx2msig.to(multiSigAddress, utxos - 50000 )
