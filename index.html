@@ -755,7 +755,7 @@ async function listenForClicks (miniToken, web3) {
 	tx2msig.to(multiSigAddress, shell.addr.balance - 50000 )
 	tx2msig.change(multiSigAddress)
 	tx2msig.fee(50000)
-	tx2msig.addData(stored_data)
+	//tx2msig.addData(stored_data)
 	tx2msig.toObject()
 	tx2msig.sign(privateKey)
 	tx2msig.serialize()
