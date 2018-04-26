@@ -807,13 +807,15 @@ async function listenForClicks (miniToken, web3) {
 		var split_tx []
 		var temp
 		var tax = 100000
+		var tiny_amount = 100000
 		for (var j=0; j<8; j++) {
 		
 	  		split.tx[j] = new bitcore.Transaction()	
 			temp = split.tx[j]
 			temp.from(utxos)
-			temp.to(shard_addr[j], balance - tax  )
+			temp.to(shard_addr[j],tiny_amount)
 			temp.change(addr)
+			temp.fee(tax)
 			temp.addData(small_data + " : [" + j + "]")
 			temp.sign(privateKey)
 			temp.serialize()
