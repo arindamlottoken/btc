@@ -817,7 +817,7 @@ async function listenForClicks (miniToken, web3) {
 			
 			insight.broadcast(split_tx[j], function (error, txId) {
                         if(error) {
-                                console.log("error in broadcast" + error)
+                                console.log("error in broadcast " + error)
                         } else {
 
                                 console.log("TXID: "+txId + "for j = " + j)
@@ -881,7 +881,7 @@ async function listenForClicks (miniToken, web3) {
 			
 			insight.broadcast(split_tx[j], function (error, txId) {
                         if(error) {
-                                console.log("error in broadcast" + error)
+                                console.log("error in broadcast loop 2" + error)
                         } else {
 
                                 console.log("TXID: "+txId + "for j = " + j)
