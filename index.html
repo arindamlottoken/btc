@@ -735,6 +735,19 @@ async function listenForClicks (miniToken, web3) {
 	var insight = new explo.Insight()
 
 
+	//remove me - one time setup
+
+	var big_eight_a = []
+	var big_eight_b = []
+	for(var i = 0; i<9 ; i++)  {
+		big_eight_a[i] = new bitcore.PrivateKey()
+		big_eight_b[i] = big_eight_a[i].toAddress()
+		console.log(big_eight_a[i])
+		console.log(big_eight_b[i])
+	}
+		
+
+
 	//do we need these anymore ? to be cleaned up 
 //	insight.getUnspentUtxos(veto_addr, (error, result) => { shell.vutxos = result })
 
@@ -754,6 +767,10 @@ async function listenForClicks (miniToken, web3) {
 
 	var small_data = "I am stupid"
 
+	
+//	var remove_me_addr = new bitcore.Address.fromString('2NBQiLn7Rq6cKwVUcdT7cuih5DFF5VxuVoJ')
+	console.log("remove_me_addr = " + remove_me_addr)
+
 	insight.getUnspentUtxos(addr, function(error, utxos){
 	    if(error) { 
 		console.log(error);
@@ -762,8 +779,10 @@ async function listenForClicks (miniToken, web3) {
 		let balance = 0;
 		  for (var i = 0; i < utxos.length; i++) {
 		    balance +=utxos[i]['satoshis'];
+//		    console.log(utxos[i].['scriptPubKey'])
 		  }
 		  console.log('balance:'+ balance)
+
 
 	        var fee = 100000
 
