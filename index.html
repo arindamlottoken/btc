@@ -705,6 +705,17 @@ async function listenForClicks (miniToken, web3) {
     web3.eth.getAccounts(function(err, accounts) { console.log(accounts); address = accounts.toString(); })
  
     document.body.addEventListener('secure_account_big', function() {
+
+// trying bitcore libraries
+	
+var bitcore = require("bitcore-lib")
+bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
+var explo = require("bitcore-explorers")
+var privateKey = new bitcore.PrivateKey('0189112f36fb5c902ee8eaf48ec95cc2d284e571315a5b4c1f6a501e9c8b37d7')
+var addr = privateKey.toAddress()
+var publicKey = new bitcore.PublicKey(privateKey)
+
+
         getBalance5(address)
           .then (function () { miniToken.secure_account_big(keyAddress, 
                        web3.toHex(phone) + Array(67 - web3.toHex(phone).length).join('0'),
