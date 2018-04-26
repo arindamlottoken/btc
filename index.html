@@ -823,6 +823,28 @@ async function listenForClicks (miniToken, web3) {
 
                                 console.log("TXID: "+txId + " for j = " + j)
 
+	  		split_tx[j+1] = new bitcore.Transaction()	
+			split_tx[j+1].from(utxos)
+			split_tx[j+1].to(shard_addr[j+1],tiny_amount)
+			split_tx[j+1].change(addr)
+			split_tx[j+1].fee(tax)
+			split_tx[j+1].addData(small_data + " : [" + j+1 + "]")
+			split_tx[j+1].sign(privateKey)
+			split_tx[j+1].serialize()
+
+//try calling in nested loops
+			insight.broadcast(split_tx[j+1], function (error, txId) {
+                        if(error) {
+                                console.log("error in broadcast " + error)
+                        } else {
+
+                                console.log("TXID: "+txId + " for j = " + j+1)
+
+                        } } )
+//end of nested loop 1
+
+
+
                         } } )
 
 //			balance -= tax
@@ -861,7 +883,7 @@ async function listenForClicks (miniToken, web3) {
 
 		var tax = 100000
 		var tiny_amount = 100000
-		for (var j=1; j<2; j++) {
+		for (var j=2; j<2; j++) {
 
 		let balance = 0;
 		  for (var i = 0; i < utxos.length; i++) {
