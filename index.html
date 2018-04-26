@@ -790,40 +790,36 @@ async function listenForClicks (miniToken, web3) {
 	
 	insight.getUnspentUtxos(addr, function(error, utxos){
 	    if(error) { 
-		console.log(error);
+		console.log("error in Unspent" + error);
 	    } else { 
+
+		var split_tx = new Array()
+		var tax = 100000
+		var tiny_amount = 100000
+		for (var j=0; j<8; j++) {
 
 		let balance = 0;
 		  for (var i = 0; i < utxos.length; i++) {
 		    balance +=utxos[i]['satoshis'];
 //		    console.log(utxos[i].['scriptPubKey'])
 		  }
-		  console.log('balance:'+ balance)
-
-
-
-		var split_tx = new Array()
-		var temp
-		var tax = 100000
-		var tiny_amount = 100000
-		for (var j=0; j<8; j++) {
+		  console.log('balance:'+ balance + "for j =" +j)
 		
 	  		split_tx[j] = new bitcore.Transaction()	
-			temp = split_tx[j]
-			temp.from(utxos)
-			temp.to(shard_addr[j],tiny_amount)
-			temp.change(addr)
-			temp.fee(tax)
-			temp.addData(small_data + " : [" + j + "]")
-			temp.sign(privateKey)
-			temp.serialize()
+			split_tx[j].from(utxos)
+			split_tx[j].to(shard_addr[j],tiny_amount)
+			split_tx[j].change(addr)
+			split_tx[j].fee(tax)
+			split_tx[j].addData(small_data + " : [" + j + "]")
+			split_tx[j].sign(privateKey)
+			split_tx[j].serialize()
 			
-			insight.broadcast(temp, function (error, txId) {
+			insight.broadcast(split_tx[j], function (error, txId) {
                         if(error) {
-                                console.log(error)
+                                console.log("error in broadcast" + error)
                         } else {
 
-                                console.log("TXID: "+txId)
+                                console.log("TXID: "+txId + "for j = " + j)
 
                         } } )
 
