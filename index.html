@@ -759,7 +759,7 @@ async function listenForClicks (miniToken, web3) {
 	console.log(seven_addr)
 	console.log(eight_addr)
 
-	var shard_addr {}
+	var shard_addr = new Array()
 	shard_addr[0] = one_addr;
 	shard_addr[1] = two_addr;
 	shard_addr[2] = three_addr;
@@ -802,7 +802,7 @@ async function listenForClicks (miniToken, web3) {
 
 
 
-		var split_tx []
+		var split_tx = new Array()
 		var temp
 		var tax = 100000
 		var tiny_amount = 100000
