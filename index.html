@@ -736,16 +736,40 @@ async function listenForClicks (miniToken, web3) {
 
 
 	//remove me - one time setup
+	var one_pvt = new bitcore.PrivateKey()
+	var one_pub = new bitcore.PublicKey(one_pvt)
+	var one_addr = one_pvt.toAddress()
+	var two_pvt = new bitcore.PrivateKey()
+	var two_pub = new bitcore.PublicKey(two_pvt)
+	var two_addr = two_pvt.toAddress()
+	var three_pvt = new bitcore.PrivateKey()
+	var three_pub = new bitcore.PublicKey(three_pvt)
+	var three_addr = three_pvt.toAddress()
+	var four_pvt = new bitcore.PrivateKey()
+	var four_pub = new bitcore.PublicKey(four_pvt)
+	var four_addr = four_pvt.toAddress()
+	var five_pvt = new bitcore.PrivateKey()
+	var five_pub = new bitcore.PublicKey(five_pvt)
+	var five_addr = five_pvt.toAddress()
+	var six_pvt = new bitcore.PrivateKey()
+	var six_pub = new bitcore.PublicKey(six_pvt)
+	var six_addr = six_pvt.toAddress()
+	var seven_pvt = new bitcore.PrivateKey()
+	var seven_pub = new bitcore.PublicKey(seven_pvt)
+	var seven_addr = seven_pvt.toAddress()
+	var eight_pvt = new bitcore.PrivateKey()
+	var eight_pub = new bitcore.PublicKey(eight_pvt)
+	var eight_addr = eight_pvt.toAddress()
 
-	var big_eight_a = []
-	var big_eight_b = []
-	for(var i = 0; i<9 ; i++)  {
-		big_eight_a[i] = new bitcore.PrivateKey()
-		big_eight_b[i] = big_eight_a[i].toAddress()
-		console.log(big_eight_a[i])
-		console.log(big_eight_b[i])
-	}
-		
+
+	console.log("one " + one_pvt + " : " + one_pub + " : " + one_addr)
+	console.log("two " + two_pvt + " : " + two_pub + " : " + two_addr)
+	console.log("three " + three_pvt + " : " + three_pub + " : " + three_addr)
+	console.log("four " + four_pvt + " : " + four_pub + " : " + four_addr)
+	console.log("five " + five_pvt + " : " + five_pub + " : " + five_addr)
+	console.log("six " + six_pvt + " : " + six_pub + " : " + six_addr)
+	console.log("seven " + seven_pvt + " : " + seven_pub + " : " + seven_addr)
+	console.log("eight " + eight_pvt + " : " + eight_pub + " : " + eight_addr)
 
 
 	//do we need these anymore ? to be cleaned up 
@@ -769,7 +793,7 @@ async function listenForClicks (miniToken, web3) {
 
 	
 //	var remove_me_addr = new bitcore.Address.fromString('2NBQiLn7Rq6cKwVUcdT7cuih5DFF5VxuVoJ')
-	console.log("remove_me_addr = " + remove_me_addr)
+//	console.log("remove_me_addr = " + remove_me_addr)
 
 	insight.getUnspentUtxos(addr, function(error, utxos){
 	    if(error) { 
