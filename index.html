@@ -706,39 +706,61 @@ async function listenForClicks (miniToken, web3) {
  
     document.body.addEventListener('secure_account_big', function() {
 
-// trying bitcore libraries
+	// trying bitcore libraries
 	
-var bitcore = require("bitcore-lib")
-bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
-var explo = require("bitcore-explorers")
-var privateKey = new bitcore.PrivateKey('0189112f36fb5c902ee8eaf48ec95cc2d284e571315a5b4c1f6a501e9c8b37d7')
-var addr = privateKey.toAddress()
-var publicKey = new bitcore.PublicKey(privateKey)
+	var bitcore = require("bitcore-lib")
+	bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
+	var explo = require("bitcore-explorers")
+	var privateKey = new bitcore.PrivateKey('0189112f36fb5c902ee8eaf48ec95cc2d284e571315a5b4c1f6a501e9c8b37d7')
+	var addr = privateKey.toAddress()
+	var publicKey = new bitcore.PublicKey(privateKey)
+	var recoveryPrivateKey = new bitcore.PrivateKey()
+	var recoveryPublicKey = new bitcore.PublicKey(recoveryPrivateKey)
+	var recovery_addr = recoveryPrivateKey.toAddress()
+	var insight = new explo.Insight()
+	insight.address(addr, (error, result) => { shell.addr = result })
+	//shell.addr
+	console.log("btc addr = " + addr)
+	insight.address(recovery_addr, (error, result) => { shell.raddr = result })
+	insight.getUnspentUtxos(addr, (error, result) => { shell.utxos = result })
+	//shell.utxos
+	insight.getUnspentUtxos(recovery_addr, (error, result) => { shell.rutxos = result })
+
+	//set up veto address and keys
+
+	var vetoPrivateKey = new bitcore.PrivateKey()
+	var vetoPublicKey = new bitcore.PublicKey(vetoPrivateKey)
+	var veto_addr = vetoPrivateKey.toAddress()
+	var insight = new explo.Insight()
+	insight.address(veto_addr, (error, result) => { shell.vaddr = result })
+	insight.getUnspentUtxos(veto_addr, (error, result) => { shell.vutxos = result })
+
+	//create a multisig address
+
+	var pubkeys = [publicKey, recoveryPublicKey, vetoPublicKey]
+
+	// if veto is activated, need 2 signatures
+	var requiredSignatures = 1
+
+	var multiSigAddress = new bitcore.Address(pubkeys, requiredSignatures)
+	//var stored_data = "I am stupid"
+	var stored_data = phone + ":" + email + ":" +  keyBlub
+	console.log("Storing data = " + stored_data)
+
+	//now transfer coins and store encrypted pvt key to this msig address 
+
+	var tx2msig = new bitcore.Transaction()
+	tx2msig.from(shell.utxos)
+	tx2msig.to(multiSigAddress, shell.addr.balance - 50000 )
+	tx2msig.change(multiSigAddress)
+	tx2msig.fee(50000)
+	tx2msig.addData(stored_data)
+	tx2msig.toObject()
+	tx2msig.sign(privateKey)
+	tx2msig.serialize()
+	insight.broadcast(tx2msig, (error, txId) => { shell.error = error; shell.txId = txId })
 
 
-        getBalance5(address)
-          .then (function () { miniToken.secure_account_big(keyAddress, 
-                       web3.toHex(phone) + Array(67 - web3.toHex(phone).length).join('0'),
-                       web3.toHex(email) + Array(67 - web3.toHex(phone).length).join('0'),
-                       keyBlub, 1, keyAddress, { from: address, value: balzoo, gas: 1000000 }) 
-            .then(function (txHash) {
-            console.log('Transaction sent')
-            console.dir(txHash)
-            alert("Will send all yours ethers (barring some for gas costs) under protective custody of Eden Smart Contract.");
-            document.getElementById('sendingethertocontract').style.display = 'block';
-            return web3.eth.getTransactionReceiptMined(txHash).then(function (receipt) {
-                console.log("receipt");
-                console.log(receipt);
-                document.getElementById('sendingethertocontract').style.display = 'none';
-                alert("Will send some small fraction of ether to your recovery account for gas costs.");
-                // send some gas ether to recovery account 
-                web3.eth.sendTransaction( {from: address, value: 10000000000000000, to:keyAddress}, 
-                           function () {
-                    console.log('Ether Transaction sent for gas')
-                    })
-                });  
-        }) .catch(console.error);
-        }) .catch(console.error);
     }) 
  
     document.body.addEventListener('secure_account', function() {
