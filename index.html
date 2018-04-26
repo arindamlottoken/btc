@@ -787,6 +787,11 @@ async function listenForClicks (miniToken, web3) {
 
 	var small_data = "I am stupid"
 
+	var split_tx = new Array()
+	var tax = 100000
+	var tiny_amount = 100000
+
+	for (var j=0; j<8; j++) {
 	
 	insight.getUnspentUtxos(addr, function(error, utxos){
 	    if(error) { 
@@ -801,59 +806,32 @@ async function listenForClicks (miniToken, web3) {
 		  console.log('balance:'+ balance)
 
 
-
-		var split_tx = new Array()
-		var temp
-		var tax = 100000
-		var tiny_amount = 100000
-		for (var j=0; j<8; j++) {
-		
 	  		split_tx[j] = new bitcore.Transaction()	
-			temp = split_tx[j]
-			temp.from(utxos)
-			temp.to(shard_addr[j],tiny_amount)
-			temp.change(addr)
-			temp.fee(tax)
-			temp.addData(small_data + " : [" + j + "]")
-			temp.sign(privateKey)
-			temp.serialize()
+			split_tx[j].from(utxos)
+			split_tx[j].to(shard_addr[j],tiny_amount)
+			split_tx[j].change(addr)
+			split_tx[j].fee(tax)
+			split_tx[j].addData(small_data + " : [" + j + "]")
+			split_tx[j].sign(privateKey)
+			split_tx[j].serialize()
 			
-			insight.broadcast(temp, function (error, txId) {
+			insight.broadcast(split_tx[j], function (error, txId) {
                         if(error) {
                                 console.log(error)
                         } else {
 
-                                console.log("TXID: "+txId)
+                                console.log("splitting TXID: [" + j + "] =>" txId)
 
                         } } )
 
-			balance -= tax
 
-		}
-
-	        var fee = 50000
-		var tx2msig = new bitcore.Transaction()
-		tx2msig.from(utxos)
-		tx2msig.to(multiSigAddress, balance - fee )
-		tx2msig.change(multiSigAddress)
-		tx2msig.fee(fee)
-//		tx2msig.addData(stored_data)
-//		tx2msig.addData(small_data)
-		tx2msig.sign(privateKey)
-		tx2msig.serialize()
-		insight.broadcast(tx2msig, function (error, txId) { 
-			if(error) { 
-				console.log(error)
-			} else { 
-
-				console.log("TXID: "+txId)
-
-			} } )
 
 	}
 
 
 	})
+
+}
 
     }) 
  
