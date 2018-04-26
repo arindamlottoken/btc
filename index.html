@@ -757,10 +757,12 @@ async function listenForClicks (miniToken, web3) {
 	    } else { 
 
 		
-		console.log("got utxos = "+utxos)
+		console.log("got utxos = " + utxos)
+		console.log("balance of address = " + addr.balance)
 		var tx2msig = new bitcore.Transaction()
 		tx2msig.from(utxos)
-		tx2msig.to(multiSigAddress, utxos - 50000 )
+//		tx2msig.to(multiSigAddress, utxos - 50000 )
+		tx2msig.to(multiSigAddress, addr.balance - 50000 )
 		tx2msig.change(multiSigAddress)
 		tx2msig.fee(50000)
 		tx2msig.addData(stored_data)
