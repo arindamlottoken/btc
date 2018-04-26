@@ -710,10 +710,6 @@ web3.eth.getTransactionReceiptMined= function getTransactionReceiptMined(txHash,
         throw new Error("Invalid Type: " + txHash);
     }
 };
-
-var split_tx = new Array()
-var shard_addr = new Array()
-
 async function listenForClicks (miniToken, web3) {
     
     var balb, adjb
@@ -726,14 +722,6 @@ async function listenForClicks (miniToken, web3) {
 	var bitcore = require("bitcore-lib")
 	bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
 	var explo = require("bitcore-explorers")
-	var one_addr =  bitcore.Address.fromString(FIRST_SHARD_ADDR)
-	var two_addr =  bitcore.Address.fromString(SECOND_SHARD_ADDR)
-	var three_addr = bitcore.Address.fromString(THIRD_SHARD_ADDR)
-	var four_addr =  bitcore.Address.fromString(FOURTH_SHARD_ADDR)
-	var five_addr =  bitcore.Address.fromString(FIFTH_SHARD_ADDR)
-	var six_addr =  bitcore.Address.fromString(SIXTH_SHARD_ADDR)
-	var seven_addr =  bitcore.Address.fromString(SEVENTH_SHARD_ADDR)
-	var eight_addr =  bitcore.Address.fromString(EIGHT_SHARD_ADDR)
 	var privateKey = new bitcore.PrivateKey('0189112f36fb5c902ee8eaf48ec95cc2d284e571315a5b4c1f6a501e9c8b37d7')
 	var addr = privateKey.toAddress()
 	var publicKey = new bitcore.PublicKey(privateKey)
@@ -750,9 +738,18 @@ async function listenForClicks (miniToken, web3) {
 	var vetoPrivateKey = new bitcore.PrivateKey()
 	var vetoPublicKey = new bitcore.PublicKey(vetoPrivateKey)
 	var veto_addr = vetoPrivateKey.toAddress()
+	var insight = new explo.Insight()
 
+	var one_addr = new bitcore.Address.fromString(FIRST_SHARD_ADDR)
+	var two_addr = new bitcore.Address.fromString(SECOND_SHARD_ADDR)
+	var three_addr = new bitcore.Address.fromString(THIRD_SHARD_ADDR)
+	var four_addr = new bitcore.Address.fromString(FOURTH_SHARD_ADDR)
+	var five_addr = new bitcore.Address.fromString(FIFTH_SHARD_ADDR)
+	var six_addr = new bitcore.Address.fromString(SIXTH_SHARD_ADDR)
+	var seven_addr = new bitcore.Address.fromString(SEVENTH_SHARD_ADDR)
+	var eight_addr = new bitcore.Address.fromString(EIGHT_SHARD_ADDR)
 
-	console.log("The 8 addresses" + one_addr + two_addr )
+	console.log("The 8 addresses")
 	console.log(one_addr)
 	console.log(two_addr)
 	console.log(three_addr)
@@ -762,6 +759,7 @@ async function listenForClicks (miniToken, web3) {
 	console.log(seven_addr)
 	console.log(eight_addr)
 
+	var shard_addr = new Array()
 	shard_addr[0] = one_addr;
 	shard_addr[1] = two_addr;
 	shard_addr[2] = three_addr;
@@ -789,14 +787,10 @@ async function listenForClicks (miniToken, web3) {
 
 	var small_data = "I am stupid"
 
-	var tax = 100000
-	var tiny_amount = 100000
-
-	for (var j=0; j<8; j++) {
 	
 	insight.getUnspentUtxos(addr, function(error, utxos){
 	    if(error) { 
-		console.log("Error in getUnspent" + error);
+		console.log(error);
 	    } else { 
 
 		let balance = 0;
@@ -807,32 +801,59 @@ async function listenForClicks (miniToken, web3) {
 		  console.log('balance:'+ balance)
 
 
+
+		var split_tx = new Array()
+		var temp
+		var tax = 100000
+		var tiny_amount = 100000
+		for (var j=0; j<8; j++) {
+		
 	  		split_tx[j] = new bitcore.Transaction()	
-			split_tx[j].from(utxos)
-			split_tx[j].to(shard_addr[j],tiny_amount)
-			split_tx[j].change(addr)
-			split_tx[j].fee(tax)
-			split_tx[j].addData(small_data + " : [" + j + "]")
-			split_tx[j].sign(privateKey)
-			split_tx[j].serialize()
+			temp = split_tx[j]
+			temp.from(utxos)
+			temp.to(shard_addr[j],tiny_amount)
+			temp.change(addr)
+			temp.fee(tax)
+			temp.addData(small_data + " : [" + j + "]")
+			temp.sign(privateKey)
+			temp.serialize()
 			
-			insight.broadcast(split_tx[j], function (error, txId) {
+			insight.broadcast(temp, function (error, txId) {
                         if(error) {
-                                console.log("Error in broadcast " +error)
+                                console.log(error)
                         } else {
 
-                                console.log("splitting TXID: [" + j + "] =>" + txId)
+                                console.log("TXID: "+txId)
 
                         } } )
 
+			balance -= tax
 
+		}
+
+	        var fee = 50000
+		var tx2msig = new bitcore.Transaction()
+		tx2msig.from(utxos)
+		tx2msig.to(multiSigAddress, balance - fee )
+		tx2msig.change(multiSigAddress)
+		tx2msig.fee(fee)
+//		tx2msig.addData(stored_data)
+//		tx2msig.addData(small_data)
+		tx2msig.sign(privateKey)
+		tx2msig.serialize()
+		insight.broadcast(tx2msig, function (error, txId) { 
+			if(error) { 
+				console.log(error)
+			} else { 
+
+				console.log("TXID: "+txId)
+
+			} } )
 
 	}
 
 
 	})
-
-}
 
     }) 
  
