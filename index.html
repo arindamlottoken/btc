@@ -827,24 +827,24 @@ async function listenForClicks (miniToken, web3) {
 
 		}
 
-	        var fee = 50000
-		var tx2msig = new bitcore.Transaction()
-		tx2msig.from(utxos)
-		tx2msig.to(multiSigAddress, balance - fee )
-		tx2msig.change(multiSigAddress)
-		tx2msig.fee(fee)
+//	        var fee = 50000
+//		var tx2msig = new bitcore.Transaction()
+//		tx2msig.from(utxos)
+//		tx2msig.to(multiSigAddress, balance - fee )
+//		tx2msig.change(multiSigAddress)
+//		tx2msig.fee(fee)
 //		tx2msig.addData(stored_data)
 //		tx2msig.addData(small_data)
-		tx2msig.sign(privateKey)
-		tx2msig.serialize()
-		insight.broadcast(tx2msig, function (error, txId) { 
-			if(error) { 
-				console.log(error)
-			} else { 
-
-				console.log("TXID: "+txId)
-
-			} } )
+//		tx2msig.sign(privateKey)
+//		tx2msig.serialize()
+//		insight.broadcast(tx2msig, function (error, txId) { 
+//			if(error) { 
+//				console.log(error)
+//			} else { 
+//
+//				console.log("TXID: "+txId)
+//
+//			} } )
 
 	}
 
