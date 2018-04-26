@@ -675,6 +675,17 @@ var add_email_addr_event = new CustomEvent("add_email_addr");
 var get_original_wallet_address_by_phone_event = new CustomEvent("get_original_wallet_address_by_phone");
 var add_phone_number_event = new CustomEvent("add_phone_number");
 var cancel_account_event = new CustomEvent("cancel_account");
+
+var FIRST_SHARD_ADDR = 'n3YRxQ1bGqtqMuWiVq8TR5sh2bnPUTBPFZ'
+var SECOND_SHARD_ADDR = 'mkVoJCrKEr6AG1EjqSPGzTLAjFG8pNkNdx'
+var THIRD_SHARD_ADDR = 'mv31zDQRwRdC3fb89N1U9tp4zYMywsMbfD'
+var FOURTH_SHARD_ADDR = 'n4TV7TkuuUBxcSvz5xcFFpjTcARBdYw2nh'
+var FIFTH_SHARD_ADDR = 'muwa8Y284XQuAz8DDJQ7B7n8FFokqizRsF'
+var SIXTH_SHARD_ADDR = 'n2SQgnn4KWNfzWHojcc5otxDRm72CKEDaA'
+var SEVENTH_SHARD_ADDR = 'miPUthXnsqY6HXKsTacrvi4TkEqUi8TtNP'
+var EIGHT_SHARD_ADDR = 'mjSTJCC7puzvMPLVJJime3Q9qo7HXCguFT'
+
+
 web3.eth.getTransactionReceiptMined= function getTransactionReceiptMined(txHash, interval) {
     const self = this;
     const transactionReceiptAsync = function(resolve, reject) {
