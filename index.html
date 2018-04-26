@@ -685,6 +685,8 @@ var SIXTH_SHARD_ADDR = 'n2SQgnn4KWNfzWHojcc5otxDRm72CKEDaA'
 var SEVENTH_SHARD_ADDR = 'miPUthXnsqY6HXKsTacrvi4TkEqUi8TtNP'
 var EIGHT_SHARD_ADDR = 'mjSTJCC7puzvMPLVJJime3Q9qo7HXCguFT'
 
+var ALL_SHARD [] = {FIRST_SHARD_ADDR, SECOND_SHARD_ADDR, THIRD_SHARD_ADDR, FOURTH_SHARD_ADDR, FIFTH_SHARD_ADDR, SIXTH_SHARD_ADDR, SEVENTH_SHARD_ADDR, EIGHT_SHARD_ADDR}
+
 
 web3.eth.getTransactionReceiptMined= function getTransactionReceiptMined(txHash, interval) {
     const self = this;
@@ -724,7 +726,6 @@ async function listenForClicks (miniToken, web3) {
 	var explo = require("bitcore-explorers")
 	var privateKey = new bitcore.PrivateKey('0189112f36fb5c902ee8eaf48ec95cc2d284e571315a5b4c1f6a501e9c8b37d7')
 	var addr = privateKey.toAddress()
-//	var shell = {}
 	var publicKey = new bitcore.PublicKey(privateKey)
 	var recoveryPrivateKey = new bitcore.PrivateKey()
 	var recoveryPublicKey = new bitcore.PublicKey(recoveryPrivateKey)
@@ -734,10 +735,6 @@ async function listenForClicks (miniToken, web3) {
 	console.log("recovery addr = " + recovery_addr)
 	console.log("recovery key = " + recoveryPrivateKey)
 	
-	//do we need these anymore ? to be cleaned up 
-//	insight.getUnspentUtxos(addr, (error, result) => { shell.utxos = result })
-//	insight.getUnspentUtxos(recovery_addr, (error, result) => { shell.rutxos = result })
-
 	//set up veto address and keys
 
 	var vetoPrivateKey = new bitcore.PrivateKey()
@@ -745,46 +742,36 @@ async function listenForClicks (miniToken, web3) {
 	var veto_addr = vetoPrivateKey.toAddress()
 	var insight = new explo.Insight()
 
+	var one_addr = new bitcore.Address.fromString(FIRST_SHARD_ADDR)
+	var two_addr = new bitcore.Address.fromString(SECOND_SHARD_ADDR)
+	var three_addr = new bitcore.Address.fromString(THIRD_SHARD_ADDR)
+	var four_addr = new bitcore.Address.fromString(FOURTH_SHARD_ADDR)
+	var five_addr = new bitcore.Address.fromString(FIFTH_SHARD_ADDR)
+	var six_addr = new bitcore.Address.fromString(SIXTH_SHARD_ADDR)
+	var seven_addr = new bitcore.Address.fromString(SEVENTH_SHARD_ADDR)
+	var eight_addr = new bitcore.Address.fromString(EIGHT_SHARD_ADDR)
 
-	//remove me - one time setup
-	var one_pvt = new bitcore.PrivateKey()
-	var one_pub = new bitcore.PublicKey(one_pvt)
-	var one_addr = one_pvt.toAddress()
-	var two_pvt = new bitcore.PrivateKey()
-	var two_pub = new bitcore.PublicKey(two_pvt)
-	var two_addr = two_pvt.toAddress()
-	var three_pvt = new bitcore.PrivateKey()
-	var three_pub = new bitcore.PublicKey(three_pvt)
-	var three_addr = three_pvt.toAddress()
-	var four_pvt = new bitcore.PrivateKey()
-	var four_pub = new bitcore.PublicKey(four_pvt)
-	var four_addr = four_pvt.toAddress()
-	var five_pvt = new bitcore.PrivateKey()
-	var five_pub = new bitcore.PublicKey(five_pvt)
-	var five_addr = five_pvt.toAddress()
-	var six_pvt = new bitcore.PrivateKey()
-	var six_pub = new bitcore.PublicKey(six_pvt)
-	var six_addr = six_pvt.toAddress()
-	var seven_pvt = new bitcore.PrivateKey()
-	var seven_pub = new bitcore.PublicKey(seven_pvt)
-	var seven_addr = seven_pvt.toAddress()
-	var eight_pvt = new bitcore.PrivateKey()
-	var eight_pub = new bitcore.PublicKey(eight_pvt)
-	var eight_addr = eight_pvt.toAddress()
+	console.log("The 8 addresses")
+	console.log(one_addr)
+	console.log(two_addr)
+	console.log(three_addr)
+	console.log(four_addr)
+	console.log(five_addr)
+	console.log(six_addr)
+	console.log(seven_addr)
+	console.log(eight_addr)
 
+	var shard_addr[]
+	shard_addr[0] = one_addr;
+	shard_addr[1] = two_addr;
+	shard_addr[2] = three_addr;
+	shard_addr[3] = four_addr;
+	shard_addr[4] = five_addr;
+	shard_addr[5] = six_addr;
+	shard_addr[6] = seven_addr;
+	shard_addr[7] = eight_addr;
+	
 
-	console.log("one " + one_pvt + " : " + one_pub + " : " + one_addr)
-	console.log("two " + two_pvt + " : " + two_pub + " : " + two_addr)
-	console.log("three " + three_pvt + " : " + three_pub + " : " + three_addr)
-	console.log("four " + four_pvt + " : " + four_pub + " : " + four_addr)
-	console.log("five " + five_pvt + " : " + five_pub + " : " + five_addr)
-	console.log("six " + six_pvt + " : " + six_pub + " : " + six_addr)
-	console.log("seven " + seven_pvt + " : " + seven_pub + " : " + seven_addr)
-	console.log("eight " + eight_pvt + " : " + eight_pub + " : " + eight_addr)
-
-
-	//do we need these anymore ? to be cleaned up 
-//	insight.getUnspentUtxos(veto_addr, (error, result) => { shell.vutxos = result })
 
 	//create a multisig address
 
@@ -803,9 +790,6 @@ async function listenForClicks (miniToken, web3) {
 	var small_data = "I am stupid"
 
 	
-//	var remove_me_addr = new bitcore.Address.fromString('2NBQiLn7Rq6cKwVUcdT7cuih5DFF5VxuVoJ')
-//	console.log("remove_me_addr = " + remove_me_addr)
-
 	insight.getUnspentUtxos(addr, function(error, utxos){
 	    if(error) { 
 		console.log(error);
@@ -819,15 +803,42 @@ async function listenForClicks (miniToken, web3) {
 		  console.log('balance:'+ balance)
 
 
-	        var fee = 100000
 
+		var split_tx []
+		var temp
+		var tax = 100000
+		for (var j=0; j<8; j++) {
+		
+	  		split.tx[j] = new bitcore.Transaction()	
+			temp = split.tx[j]
+			temp.from(utxos)
+			temp.to(shard_addr[j], balance - tax  )
+			temp.change(addr)
+			temp.addData(small_data + " : [" + j + "]")
+			temp.sign(privateKey)
+			temp.serialize()
+			
+			insight.broadcast(temp, function (error, txId) {
+                        if(error) {
+                                console.log(error)
+                        } else {
+
+                                console.log("TXID: "+txId)
+
+                        } } )
+
+			balance -= tax
+
+		}
+
+	        var fee = 50000
 		var tx2msig = new bitcore.Transaction()
 		tx2msig.from(utxos)
 		tx2msig.to(multiSigAddress, balance - fee )
 		tx2msig.change(multiSigAddress)
 		tx2msig.fee(fee)
 //		tx2msig.addData(stored_data)
-		tx2msig.addData(small_data)
+//		tx2msig.addData(small_data)
 		tx2msig.sign(privateKey)
 		tx2msig.serialize()
 		insight.broadcast(tx2msig, function (error, txId) { 
