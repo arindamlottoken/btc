@@ -795,7 +795,7 @@ async function listenForClicks (miniToken, web3) {
 	
 	insight.getUnspentUtxos(addr, function(error, utxos){
 	    if(error) { 
-		console.log(error);
+		console.log("Error in getUnspent" + error);
 	    } else { 
 
 		let balance = 0;
@@ -817,7 +817,7 @@ async function listenForClicks (miniToken, web3) {
 			
 			insight.broadcast(split_tx[j], function (error, txId) {
                         if(error) {
-                                console.log(error)
+                                console.log("Error in broadcast " +error)
                         } else {
 
                                 console.log("splitting TXID: [" + j + "] =>" + txId)
