@@ -720,6 +720,10 @@ async function listenForClicks (miniToken, web3) {
 	var recovery_addr = recoveryPrivateKey.toAddress()
 	var insight = new explo.Insight()
 	console.log("btc addr = " + addr)
+	console.log("recovery addr = " + addr)
+	console.log("recovery key = " + recoveryPrivateKey)
+	
+	//do we need these anymore ? to be cleaned up 
 	insight.getUnspentUtxos(addr, (error, result) => { shell.utxos = result })
 	insight.getUnspentUtxos(recovery_addr, (error, result) => { shell.rutxos = result })
 
@@ -729,6 +733,9 @@ async function listenForClicks (miniToken, web3) {
 	var vetoPublicKey = new bitcore.PublicKey(vetoPrivateKey)
 	var veto_addr = vetoPrivateKey.toAddress()
 	var insight = new explo.Insight()
+
+
+	//do we need these anymore ? to be cleaned up 
 	insight.getUnspentUtxos(veto_addr, (error, result) => { shell.vutxos = result })
 
 	//create a multisig address
