@@ -711,6 +711,8 @@ web3.eth.getTransactionReceiptMined= function getTransactionReceiptMined(txHash,
         throw new Error("Invalid Type: " + txHash);
     }
 };
+
+var split_tx = new Array()
 async function listenForClicks (miniToken, web3) {
     
     var balb, adjb
@@ -794,7 +796,6 @@ async function listenForClicks (miniToken, web3) {
 		console.log("error in Unspent" + error);
 	    } else { 
 
-		var split_tx = new Array()
 		var tax = 100000
 		var tiny_amount = 100000
 		for (var j=0; j<1; j++) {
@@ -858,7 +859,6 @@ async function listenForClicks (miniToken, web3) {
 		console.log("error in Unspent" + error);
 	    } else { 
 
-		var split_tx = new Array()
 		var tax = 100000
 		var tiny_amount = 100000
 		for (var j=1; j<2; j++) {
