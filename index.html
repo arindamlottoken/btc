@@ -713,7 +713,7 @@ async function listenForClicks (miniToken, web3) {
 	var explo = require("bitcore-explorers")
 	var privateKey = new bitcore.PrivateKey('0189112f36fb5c902ee8eaf48ec95cc2d284e571315a5b4c1f6a501e9c8b37d7')
 	var addr = privateKey.toAddress()
-	var shell = {}
+//	var shell = {}
 	var publicKey = new bitcore.PublicKey(privateKey)
 	var recoveryPrivateKey = new bitcore.PrivateKey()
 	var recoveryPublicKey = new bitcore.PublicKey(recoveryPrivateKey)
@@ -724,8 +724,8 @@ async function listenForClicks (miniToken, web3) {
 	console.log("recovery key = " + recoveryPrivateKey)
 	
 	//do we need these anymore ? to be cleaned up 
-	insight.getUnspentUtxos(addr, (error, result) => { shell.utxos = result })
-	insight.getUnspentUtxos(recovery_addr, (error, result) => { shell.rutxos = result })
+//	insight.getUnspentUtxos(addr, (error, result) => { shell.utxos = result })
+//	insight.getUnspentUtxos(recovery_addr, (error, result) => { shell.rutxos = result })
 
 	//set up veto address and keys
 
@@ -736,7 +736,7 @@ async function listenForClicks (miniToken, web3) {
 
 
 	//do we need these anymore ? to be cleaned up 
-	insight.getUnspentUtxos(veto_addr, (error, result) => { shell.vutxos = result })
+//	insight.getUnspentUtxos(veto_addr, (error, result) => { shell.vutxos = result })
 
 	//create a multisig address
 
