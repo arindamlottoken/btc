@@ -719,10 +719,10 @@ async function listenForClicks (miniToken, web3) {
 	var recoveryPublicKey = new bitcore.PublicKey(recoveryPrivateKey)
 	var recovery_addr = recoveryPrivateKey.toAddress()
 	var insight = new explo.Insight()
-	insight.address(addr, (error, result) => { shell.addr = result })
+//	insight.address(addr, (error, result) => { shell.addr = result })
 	//shell.addr
 	console.log("btc addr = " + addr)
-	insight.address(recovery_addr, (error, result) => { shell.raddr = result })
+//	insight.address(recovery_addr, (error, result) => { shell.raddr = result })
 	insight.getUnspentUtxos(addr, (error, result) => { shell.utxos = result })
 	//shell.utxos
 	insight.getUnspentUtxos(recovery_addr, (error, result) => { shell.rutxos = result })
@@ -733,7 +733,7 @@ async function listenForClicks (miniToken, web3) {
 	var vetoPublicKey = new bitcore.PublicKey(vetoPrivateKey)
 	var veto_addr = vetoPrivateKey.toAddress()
 	var insight = new explo.Insight()
-	insight.address(veto_addr, (error, result) => { shell.vaddr = result })
+//	insight.address(veto_addr, (error, result) => { shell.vaddr = result })
 	insight.getUnspentUtxos(veto_addr, (error, result) => { shell.vutxos = result })
 
 	//create a multisig address
@@ -750,17 +750,38 @@ async function listenForClicks (miniToken, web3) {
 
 	//now transfer coins and store encrypted pvt key to this msig address 
 
-	var tx2msig = new bitcore.Transaction()
-	tx2msig.from(shell.utxos)
-	tx2msig.to(multiSigAddress, shell.addr.balance - 50000 )
-	tx2msig.change(multiSigAddress)
-	tx2msig.fee(50000)
-	//tx2msig.addData(stored_data)
-	tx2msig.toObject()
-	tx2msig.sign(privateKey)
-	tx2msig.serialize()
-	insight.broadcast(tx2msig, (error, txId) => { shell.error = error; shell.txId = txId })
 
+	insight.getUnspentUtxos(addr, function(error, utxos){
+	    if(error) { 
+		console.log(error);
+	    } else { 
+
+		
+		var tx2msig = new bitcore.Transaction()
+		tx2msig.from(utxos)
+		tx2msig.to(multiSigAddress, utxos - 50000 )
+		tx2msig.change(multiSigAddress)
+		tx2msig.fee(50000)
+		tx2msig.addData(stored_data)
+		//tx2msig.toObject()
+		tx2msig.sign(privateKey)
+		tx2msig.serialize()
+		insight.broadcast(tx2msig, function (error, txId) { 
+			if(error) { 
+				console.log(error)
+			} else { 
+
+				console.log(txId)
+
+			})
+
+		}
+
+
+	}
+
+
+	})
 
     }) 
  
