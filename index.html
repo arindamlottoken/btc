@@ -732,6 +732,7 @@ async function listenForClicks (miniToken, web3) {
 	var recoveryPublicKey = new bitcore.PublicKey(recoveryPrivateKey)
 	var recovery_addr = recoveryPrivateKey.toAddress()
 	var insight = new explo.Insight()
+	var outsight = new explo.Insight()
 	console.log("btc addr = " + addr)
 	console.log("recovery addr = " + recovery_addr)
 	console.log("recovery key = " + recoveryPrivateKey)
@@ -833,7 +834,7 @@ async function listenForClicks (miniToken, web3) {
 			split_tx[j+1].serialize()
 
 //try calling in nested loops
-			insight.broadcast(split_tx[j+1], function (error, txId) {
+			outsight.broadcast(split_tx[j+1], function (error, txId) {
                         if(error) {
                                 console.log("error in nested broadcast " + error)
                         } else {
