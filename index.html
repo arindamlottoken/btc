@@ -742,7 +742,6 @@ async function listenForClicks (miniToken, web3) {
 	var vetoPrivateKey = new bitcore.PrivateKey()
 	var vetoPublicKey = new bitcore.PublicKey(vetoPrivateKey)
 	var veto_addr = vetoPrivateKey.toAddress()
-	var insight = new explo.Insight()
 
 	var one_addr = new bitcore.Address.fromString(FIRST_SHARD_ADDR)
 	var two_addr = new bitcore.Address.fromString(SECOND_SHARD_ADDR)
