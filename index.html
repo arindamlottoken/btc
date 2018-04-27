@@ -833,7 +833,7 @@ async function listenForClicks (miniToken, web3) {
 			split_tx[j+1].serialize()
 
 //try calling in nested loops
-			outsight.broadcast(split_tx[j+1], function (error, txId) {
+			insight.broadcast(split_tx[j+1], function (error, txId) {
                         if(error) {
                                 console.log("error in nested broadcast " + error)
                         } else {
