@@ -835,7 +835,7 @@ async function listenForClicks (miniToken, web3) {
 //try calling in nested loops
 			insight.broadcast(split_tx[j+1], function (error, txId) {
                         if(error) {
-                                console.log("error in broadcast " + error)
+                                console.log("error in nested broadcast " + error)
                         } else {
 
                                 console.log("TXID: "+txId + " for j = " + j+1)
