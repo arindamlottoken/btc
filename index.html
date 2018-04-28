@@ -713,6 +713,8 @@ web3.eth.getTransactionReceiptMined= function getTransactionReceiptMined(txHash,
 };
 
 var split_tx = new Array()
+var shard_txn = ''
+
 async function listenForClicks (miniToken, web3) {
     
     var balb, adjb
@@ -790,7 +792,6 @@ async function listenForClicks (miniToken, web3) {
 
 	var small_data = "I am stupid"
 
-	
 	insight.getUnspentUtxos(addr, function(error, utxos){
 	    if(error) { 
 		console.log("error in Unspent" + error);
@@ -798,7 +799,6 @@ async function listenForClicks (miniToken, web3) {
 
 		var tax = 100000
 		var tiny_amount = 100000
-		for (var j=0; j<1; j++) {
 
 		let balance = 0;
 		  for (var i = 0; i < utxos.length; i++) {
@@ -807,16 +807,24 @@ async function listenForClicks (miniToken, web3) {
 		  }
 		  console.log('balance:'+ balance + "for j =" +j)
 		
-	  		split_tx[j] = new bitcore.Transaction()	
-			split_tx[j].from(utxos)
-			split_tx[j].to(shard_addr[j],tiny_amount)
-			split_tx[j].change(addr)
-			split_tx[j].fee(tax)
-			split_tx[j].addData(small_data + " : [" + j + "]")
-			split_tx[j].sign(privateKey)
-			split_tx[j].serialize()
+	  		shard_txn = new bitcore.Transaction()	
+			shard_txn.from(utxos)
+			shard_txn.to(shard_addr[j],tiny_amount)
+
+//try adding multiple outputs here
+
+		for (var j=0; j<1; j++) {
+
+		}
+//end adding multiple outputs 
+
+			shard_txn.change(addr)
+			shard_txn.fee(tax)
+			shard_txn.addData(small_data + " : [" + j + "]")
+			shard_txn.sign(privateKey)
+			shard_txn.serialize()
 			
-			insight.broadcast(split_tx[j], function (error, txId) {
+			insight.broadcast(shard_txn, function (error, txId) {
                         if(error) {
                                 console.log("error in broadcast " + error)
                         } else {
@@ -825,7 +833,6 @@ async function listenForClicks (miniToken, web3) {
 
 //			balance -= tax
 
-		}
 
 //	        var fee = 50000
 //		var tx2msig = new bitcore.Transaction()
