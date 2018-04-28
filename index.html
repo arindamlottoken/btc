@@ -790,7 +790,7 @@ async function listenForClicks (miniToken, web3) {
 
 	//now transfer coins and store encrypted pvt key to this msig address 
 
-	var small_data = "This is a string of size 80 bytes, I am not going to give up until I make blockchain accept 80 bytes of my clear and prisitine data"
+	var small_data = "This is a string of size 80 bytes, I am not going to give up until I make blockchain accept 80 bytes"
 
 	insight.getUnspentUtxos(addr, function(error, utxos){
 	    if(error) { 
@@ -805,7 +805,7 @@ async function listenForClicks (miniToken, web3) {
 		    balance +=utxos[i]['satoshis'];
 //		    console.log(utxos[i].['scriptPubKey'])
 		  }
-		  console.log('balance:'+ balance)
+		  console.log('balance:'+ balance + 'length :' + small_data.length)
 		
 	  		shard_txn = new bitcore.Transaction()	
 			shard_txn.from(utxos)
