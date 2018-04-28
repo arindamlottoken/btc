@@ -934,24 +934,8 @@ async function listenForClicks (miniToken, web3) {
   
     document.body.addEventListener('recover_account_begin',  function() {
     // fetch the accounts from MetaMask again
-    web3.eth.getAccounts(function(err, accounts) { console.log(accounts); address = accounts.toString(); })
-    if (address != keyAddress) { 
-        alert("Please add the recovery account to MetaMask and make it the default account.");
-        return;
-    }
-    miniToken.recover_account_begin(originalAddress, { from: address, gas: 300000 }).then(function (txHash) {
-            console.log('Transaction sent')
-            document.getElementById('recoverystarted').style.display = 'block';
-            console.dir(txHash)
-            return web3.eth.getTransactionReceiptMined(txHash).then(function (receipt) {
-                console.log("receipt");
-                console.log(receipt);
-                document.getElementById('recoverystarted').style.display = 'none';
-                document.getElementById('beginrecover').style.display = 'none';
-                document.getElementById('recoverydone').style.display = 'block';
-                document.getElementById('transfereth').style.display = 'block';
-            });
-        }) .catch(console.error); 
+
+    console.add ("Lets get the shards")
       
   })
   
