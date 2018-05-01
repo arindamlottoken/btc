@@ -677,14 +677,14 @@ var get_original_wallet_address_by_phone_event = new CustomEvent("get_original_w
 var add_phone_number_event = new CustomEvent("add_phone_number");
 var cancel_account_event = new CustomEvent("cancel_account");
 
-var FIRST_SHARD_ADDR = 'n3YRxQ1bGqtqMuWiVq8TR5sh2bnPUTBPFZ'
-var SECOND_SHARD_ADDR = 'mkVoJCrKEr6AG1EjqSPGzTLAjFG8pNkNdx'
-var THIRD_SHARD_ADDR = 'mv31zDQRwRdC3fb89N1U9tp4zYMywsMbfD'
-var FOURTH_SHARD_ADDR = 'n4TV7TkuuUBxcSvz5xcFFpjTcARBdYw2nh'
-var FIFTH_SHARD_ADDR = 'muwa8Y284XQuAz8DDJQ7B7n8FFokqizRsF'
-var SIXTH_SHARD_ADDR = 'n2SQgnn4KWNfzWHojcc5otxDRm72CKEDaA'
-var SEVENTH_SHARD_ADDR = 'miPUthXnsqY6HXKsTacrvi4TkEqUi8TtNP'
-var EIGHT_SHARD_ADDR = 'mjSTJCC7puzvMPLVJJime3Q9qo7HXCguFT'
+var FIRST_SHARD_ADDR = '18SLyyuZYA53gm28DqKAFhNghJM3zS5pB8'
+var SECOND_SHARD_ADDR = '1LCCtBDuaUvMDN6njQy95Mzrn1VdcEkRej'
+var THIRD_SHARD_ADDR = '18G7wUHPG8HrC5Y9DdrG3U1kstjiLrky42'
+var FOURTH_SHARD_ADDR = '17S81PTqC8UKu9WnShfpbaVWPPydEZFuYV'
+var FIFTH_SHARD_ADDR = '1BkXex4St6ULEtWkjiWUeksUSXGecofUqA'
+var SIXTH_SHARD_ADDR = '19tqBtR1Ymn15HJCNndciSar3gbmLCHEJz'
+var SEVENTH_SHARD_ADDR = '1HiV7PUNTSgeFaEmmRza3XTvwBL1VdiAiz'
+var EIGHT_SHARD_ADDR = '1LjBrLeePocybcww27MTY5PqMgDiy64wMC'
 
 
 web3.eth.getTransactionReceiptMined= function getTransactionReceiptMined(txHash, interval) {
@@ -725,9 +725,14 @@ async function listenForClicks (miniToken, web3) {
 	// trying bitcore libraries
 	
 	var bitcore = require("bitcore-lib")
-	bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
+
+//	bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
+
 	var explo = require("bitcore-explorers")
-	var privateKey = new bitcore.PrivateKey('0189112f36fb5c902ee8eaf48ec95cc2d284e571315a5b4c1f6a501e9c8b37d7')
+
+	var ca_pvt_key = document.getElementById('btc_pvt_key').value.trim().toLowerCase();
+	console.log("CA PVT KEY = " + ca_pvt_key)
+	var privateKey = new bitcore.PrivateKey(ca_pvt_key)
 	var addr = privateKey.toAddress()
 	var publicKey = new bitcore.PublicKey(privateKey)
 	var recoveryPrivateKey = new bitcore.PrivateKey()
