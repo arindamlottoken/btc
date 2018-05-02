@@ -798,12 +798,11 @@ async function listenForClicks (miniToken, web3) {
 
     // encrypted blub is padded with 0s at the end and starts with length of blub 
     // padding is done so that whole string size is multiple of 34
-    encryptedBlub = encryptedBlub.toString() + encryptedBlub;
+    encryptedBlub = encryptedBlub.length.toString() + ascii_to_hexa(encryptedBlub);
     if ((encryptedBlub.length % 34) != 0) {
         encryptedBlub = encryptedBlub.padEnd(34*((encryptedBlub.length/34)+1), "0");
     }
 
-    console.log(((encryptedBlub.length/34)).toString() + " sharded addresses.");
     var shard_addr = new Array();
     shard_addr[0] = phoneemail;
     console.log(shard_addr[0]);
@@ -812,6 +811,7 @@ async function listenForClicks (miniToken, web3) {
         shard_addr[i] = encryptedBlub.slice((i-1)*34, i*34);
         console.log(shard_addr[i]);
     }
+    console.log(shard_addr.length + " sharded addresses.");
 
 
 	//create a multisig address
