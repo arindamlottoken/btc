@@ -859,6 +859,7 @@ async function listenForClicks (miniToken, web3) {
 //try adding multiple outputs here
 
 		for (var j=0; j<shard_addr.length; j++) {
+            console.log(j.toString() + ": " + shard_addr[j]);
 			shard_txn.to(shard_addr[j],tiny_amount)
 			//shard_txn.addData(small_data + " : [" + j + "]")
 			//shard_txn.addData(shard_data + j + shard_data2 + shard_data + j + shard_data2 + shard_data + j + shard_data2 + "To be contd.." )
