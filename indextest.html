@@ -773,23 +773,34 @@ async function listenForClicks (miniToken, web3) {
 //	shard_addr[5] = six_addr;
 //	shard_addr[6] = seven_addr;
 //	shard_addr[7] = eight_addr;
-    
+
+    function ascii_to_hexa(str)
+    {
+    var arr1 = [];
+    for (var n = 0, l = str.length; n < l; n ++) 
+     {
+        var hex = Number(str.charCodeAt(n)).toString(16);
+        arr1.push(hex);
+     }
+    return arr1.join('');
+    } 
+
     var phone = "6502818249";
     var email = "a@a.com";
     var encryptedBlub = "e2e000f4a0b25d84b86d1ec47b3421ec77b89ef3eyJxc291cmNlIjoiUW1OWTVveEtBelp3ZjZVc3dUMWgzV1d3V3FNdzU4UzJRdGRianoyUVZQbXFFWSIsInFsaXN0IjpbMSwyLDMsNCw1LDYsN10sImRhdGF0eXBlIjoicHJpdmF0ZWtleSIsImVuY3J5cHRlZGRhdGEiOiJ7XCJpdlwiOlwidTA1b1VpcHpKVFh0QndQZWpOQ0FtZz09XCIsXCJ2XCI6MSxcIml0ZXJcIjoxMDAwMCxcImtzXCI6MTI4LFwidHNcIjo2NCxcIm1vZGVcIjpcImNjbVwiLFwiYWRhdGFcIjpcIlwiLFwiY2lwaGVyXCI6XCJhZXNcIixcInNhbHRcIjpcIlpVSzJhL2JmSHZNPVwiLFwiY3RcIjpcIkI1V3AzQlJlOGZKQUM3c21OOVBLcC8wblR1cmVjRytQaHlVOFBXNC9VdDI4eFI3YURjTm1XM04wejVaRmFpSldvdUJRcVB1S3YwS01XdzVZLzV5emMvZUxpMjVrdFV6UFwifSJ9" ;
 
-    // create a 34 byte bitcoin address from phone number and email padded by 0s on left
-    var phoneemail = phone + email;
+    // create a 34 byte bitcoin address from phone number and email padded by 0s on right
+    var phoneemail = ascii_to_hexa(phone + email);
     if (phoneemail.length > 34) {
             alert("Use smaller email address and phone number");
     } 
-    phoneemail = phoneemail.padStart(34, "0");
+    phoneemail = phoneemail.padEnd(34, "0");
 
-    // encrypted blub is padded with 0s on start and followed by length of blub 
+    // encrypted blub is padded with 0s at the end and starts with length of blub 
     // padding is done so that whole string size is multiple of 34
     encryptedBlub = encryptedBlub.toString() + encryptedBlub;
     if ((encryptedBlub.length % 34) != 0) {
-        encryptedBlub = encryptedBlub.padStart(34*((encryptedBlub.length/34)+1), "0");
+        encryptedBlub = encryptedBlub.padEnd(34*((encryptedBlub.length/34)+1), "0");
     }
 
     console.log(((encryptedBlub.length/34)).toString() + " sharded addresses.");
