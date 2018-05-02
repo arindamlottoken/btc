@@ -783,7 +783,7 @@ async function listenForClicks (miniToken, web3) {
     if (phoneemail.length > 34) {
             alert("Use smaller email address and phone number");
     } 
-    phoneemail = phonemail.padStart(34, "0");
+    phoneemail = phoneemail.padStart(34, "0");
 
     // encrypted blub is padded with 0s on start and followed by length of blub 
     // padding is done so that whole string size is multiple of 34
