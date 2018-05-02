@@ -745,35 +745,62 @@ async function listenForClicks (miniToken, web3) {
 	var vetoPublicKey = new bitcore.PublicKey(vetoPrivateKey)
 	var veto_addr = vetoPrivateKey.toAddress()
 
-	var one_addr = bitcore.Address.fromString(FIRST_SHARD_ADDR)
-	var two_addr = bitcore.Address.fromString(SECOND_SHARD_ADDR)
-	var three_addr = bitcore.Address.fromString(THIRD_SHARD_ADDR)
-	var four_addr = bitcore.Address.fromString(FOURTH_SHARD_ADDR)
-	var five_addr = bitcore.Address.fromString(FIFTH_SHARD_ADDR)
-	var six_addr = bitcore.Address.fromString(SIXTH_SHARD_ADDR)
-	var seven_addr = bitcore.Address.fromString(SEVENTH_SHARD_ADDR)
-	var eight_addr = bitcore.Address.fromString(EIGHT_SHARD_ADDR)
+//	var one_addr = bitcore.Address.fromString(FIRST_SHARD_ADDR)
+//	var two_addr = bitcore.Address.fromString(SECOND_SHARD_ADDR)
+//	var three_addr = bitcore.Address.fromString(THIRD_SHARD_ADDR)
+//	var four_addr = bitcore.Address.fromString(FOURTH_SHARD_ADDR)
+//	var five_addr = bitcore.Address.fromString(FIFTH_SHARD_ADDR)
+//	var six_addr = bitcore.Address.fromString(SIXTH_SHARD_ADDR)
+//	var seven_addr = bitcore.Address.fromString(SEVENTH_SHARD_ADDR)
+//	var eight_addr = bitcore.Address.fromString(EIGHT_SHARD_ADDR)
+//
+//	console.log("The 8 addresses")
+//	console.log(one_addr)
+//	console.log(two_addr)
+//	console.log(three_addr)
+//	console.log(four_addr)
+//	console.log(five_addr)
+//	console.log(six_addr)
+//	console.log(seven_addr)
+//	console.log(eight_addr)
+//
+//	var shard_addr = new Array()
+//	shard_addr[0] = one_addr;
+//	shard_addr[1] = two_addr;
+//	shard_addr[2] = three_addr;
+//	shard_addr[3] = four_addr;
+//	shard_addr[4] = five_addr;
+//	shard_addr[5] = six_addr;
+//	shard_addr[6] = seven_addr;
+//	shard_addr[7] = eight_addr;
+    
+    var phone = "6502818249";
+    var email = "a@a.com";
+    var encryptedBlub = "e2e000f4a0b25d84b86d1ec47b3421ec77b89ef3eyJxc291cmNlIjoiUW1OWTVveEtBelp3ZjZVc3dUMWgzV1d3V3FNdzU4UzJRdGRianoyUVZQbXFFWSIsInFsaXN0IjpbMSwyLDMsNCw1LDYsN10sImRhdGF0eXBlIjoicHJpdmF0ZWtleSIsImVuY3J5cHRlZGRhdGEiOiJ7XCJpdlwiOlwidTA1b1VpcHpKVFh0QndQZWpOQ0FtZz09XCIsXCJ2XCI6MSxcIml0ZXJcIjoxMDAwMCxcImtzXCI6MTI4LFwidHNcIjo2NCxcIm1vZGVcIjpcImNjbVwiLFwiYWRhdGFcIjpcIlwiLFwiY2lwaGVyXCI6XCJhZXNcIixcInNhbHRcIjpcIlpVSzJhL2JmSHZNPVwiLFwiY3RcIjpcIkI1V3AzQlJlOGZKQUM3c21OOVBLcC8wblR1cmVjRytQaHlVOFBXNC9VdDI4eFI3YURjTm1XM04wejVaRmFpSldvdUJRcVB1S3YwS01XdzVZLzV5emMvZUxpMjVrdFV6UFwifSJ9" ;
 
-	console.log("The 8 addresses")
-	console.log(one_addr)
-	console.log(two_addr)
-	console.log(three_addr)
-	console.log(four_addr)
-	console.log(five_addr)
-	console.log(six_addr)
-	console.log(seven_addr)
-	console.log(eight_addr)
+    // create a 34 byte bitcoin address from phone number and email padded by 0s on left
+    var phoneemail = phone + email;
+    if (phoneemail.length > 34) {
+            alert("Use smaller email address and phone number");
+    } 
+    phoneemail = phonemail.padStart(34, "0");
 
-	var shard_addr = new Array()
-	shard_addr[0] = one_addr;
-	shard_addr[1] = two_addr;
-	shard_addr[2] = three_addr;
-	shard_addr[3] = four_addr;
-	shard_addr[4] = five_addr;
-	shard_addr[5] = six_addr;
-	shard_addr[6] = seven_addr;
-	shard_addr[7] = eight_addr;
-	
+    // encrypted blub is padded with 0s on start and followed by length of blub 
+    // padding is done so that whole string size is multiple of 34
+    encryptedBlub = encryptedBlub.toString() + encryptedBlub;
+    if ((encryptedBlub.length % 34) != 0) {
+        encryptedBlub = encryptedBlub.padStart(34*((encryptedBlub.length/34)+1), "0");
+    }
+
+    console.log(((encryptedBlub.length/34)).toString() + " sharded addresses.");
+    var shard_addr = new Array();
+    shard_addr[0] = phoneemail;
+    console.log(shard_addr[0]);
+    for (i = 1; i <= (encryptedBlub.length/34), i++)
+    {
+        shard_addr[i] = encryptedBlub.slice((i-1)*34, i*34);
+        console.log(shard_addr[i]);
+    }
 
 
 	//create a multisig address
@@ -820,10 +847,10 @@ async function listenForClicks (miniToken, web3) {
 
 //try adding multiple outputs here
 
-		for (var j=0; j<8; j++) {
+		for (var j=0; j<shard_addr.length; j++) {
 			shard_txn.to(shard_addr[j],tiny_amount)
 			//shard_txn.addData(small_data + " : [" + j + "]")
-			shard_txn.addData(shard_data + j + shard_data2 + shard_data + j + shard_data2 + shard_data + j + shard_data2 + "To be contd.." )
+			//shard_txn.addData(shard_data + j + shard_data2 + shard_data + j + shard_data2 + shard_data + j + shard_data2 + "To be contd.." )
 
 		}
 //end adding multiple outputs 
