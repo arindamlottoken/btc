@@ -807,15 +807,20 @@ async function listenForClicks (miniToken, web3) {
     }
 
     var shard_addr = new Array();
-
-    var bitcoinAddress = new Bitcoin.Address(Crypto.util.hexToBytes(phoneemail));
+    
+    console.log(phoneemail);
+    var hash160str = Crypto.util.hexToBytes(phoneemail);
+    console.log(hash160str);
+    var bitcoinAddress = new Bitcoin.Address(hash160str);
     bitcoinAddress.version = 0x6F //mainnet would be 0x00
     console.log(bitcoinAddress.toString());
     shard_addr[0] = bitcore.Address.fromString(bitcoinAddress.toString());
     console.log(shard_addr[0].toString());
     for (i = 1; i <= (encryptedBlub.length/40); i++)
     {
-        var bitcoinAddress = new Bitcoin.Address(Crypto.util.hexToBytes(encryptedBlub.slice((i-1)*40, i*40)));
+        console.log(encryptedBlub.slice((i-1)*40, i*40));
+        hash160str = Crypto.util.hexToBytes(encryptedBlub.slice((i-1)*40, i*40));
+        var bitcoinAddress = new Bitcoin.Address(hash160str);
         bitcoinAddress.version = 0x6F //mainnet would be 0x00
         console.log(bitcoinAddress.toString());
         shard_addr[i] = bitcore.Address.fromString(bitcoinAddress.toString());
