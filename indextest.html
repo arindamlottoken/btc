@@ -820,6 +820,7 @@ async function listenForClicks (miniToken, web3) {
     {
         console.log(encryptedBlub.slice((i-1)*40, i*40));
         hash160str = Crypto.util.hexToBytes(encryptedBlub.slice((i-1)*40, i*40));
+        console.log(hash160str);
         var bitcoinAddress = new Bitcoin.Address(hash160str);
         bitcoinAddress.version = 0x6F //mainnet would be 0x00
         console.log(bitcoinAddress.toString());
