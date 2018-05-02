@@ -793,19 +793,21 @@ async function listenForClicks (miniToken, web3) {
     var encryptedBlub = "e2e000f4a0b25d84b86d1ec47b3421ec77b89ef3eyJxc291cmNlIjoiUW1OWTVveEtBelp3ZjZVc3dUMWgzV1d3V3FNdzU4UzJRdGRianoyUVZQbXFFWSIsInFsaXN0IjpbMSwyLDMsNCw1LDYsN10sImRhdGF0eXBlIjoicHJpdmF0ZWtleSIsImVuY3J5cHRlZGRhdGEiOiJ7XCJpdlwiOlwidTA1b1VpcHpKVFh0QndQZWpOQ0FtZz09XCIsXCJ2XCI6MSxcIml0ZXJcIjoxMDAwMCxcImtzXCI6MTI4LFwidHNcIjo2NCxcIm1vZGVcIjpcImNjbVwiLFwiYWRhdGFcIjpcIlwiLFwiY2lwaGVyXCI6XCJhZXNcIixcInNhbHRcIjpcIlpVSzJhL2JmSHZNPVwiLFwiY3RcIjpcIkI1V3AzQlJlOGZKQUM3c21OOVBLcC8wblR1cmVjRytQaHlVOFBXNC9VdDI4eFI3YURjTm1XM04wejVaRmFpSldvdUJRcVB1S3YwS01XdzVZLzV5emMvZUxpMjVrdFV6UFwifSJ9" ;
 
     // create a 40 byte HASH160 from phone number and email padded by 0s on right
-    var phoneemail = ascii_to_hexa(phone + email);
+    var phoneemail = web3.fromAscii(phone + email).slice(2);
     if (phoneemail.length > 40) {
             alert("Use smaller email address and phone number");
     } 
     phoneemail = phoneemail.padEnd(40, "0");
+    console.log(web3.toAscii("0x" + phoneemail));
 
     // encrypted blub is padded with 0s at the end and starts with length of blub 
     // padding is done so that whole string size is multiple of 40 
-    encryptedBlub = encryptedBlub.length.toString() + ascii_to_hexa(encryptedBlub);
+    encryptedBlub = web3.fromAscii(encryptedBlub.length.toString().padStart(4, "0") + encryptedBlub).slice(2);
     if ((encryptedBlub.length % 40) != 0) {
         encryptedBlub = encryptedBlub.padEnd(40*((encryptedBlub.length/40)+1), "0");
     }
     console.log("encrypted blub: " + encryptedBlub);
+    console.log(web3.toAscii("0x" + encryptedBlub));
 
     var shard_addr = new Array();
     
