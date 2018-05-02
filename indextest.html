@@ -1,0 +1,1158 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>Eden Protection for your Crypto Assets</title>
+</head>
+<script src="https://rawgit.com/ethereum/web3.js/0.16.0/dist/web3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethjs@0.3.0/dist/ethjs.min.js"></script>
+<script src="keythereum.min.js" type="text/javascript"></script>
+<script src="sjcl.js"></script>
+<script src="bitcore-lib.js"></script>
+<script src="bitcore-explorers.min.js"></script>
+
+<body>
+    <div>
+    btc wallet pvt key (to be integrated with trezor)  <input id="btc_pvt_key"> 
+    <br>
+    <br>
+    Phone Number <input id="phone"> 
+    <br>
+    <br>
+    Email Address <input id="email"> 
+    <br>
+    <br>
+    <button id="secure">Secure My Assets</button>
+    <button id="recover">Locate My Recovery Account</button>
+    </div>
+
+    <div id="recoveracctsection" style="display:none">
+    <button id="beginrecover" style="display:none">Begin Recovery Process</button>
+    <button id="transfereth" style="display:none">Transfer Assets</button>
+    <div id="recoverystarted" style="display:none"><b><br>Recovery process started...⌛<br></b></div>
+    <div id="recoverydone" style="display:none"><b><br>Assets ready to be transferred to recovery account.<br></b></div>
+    <div id="assettransferstarted" style="display:none"><b><br>Assets transfer started...⌛<br></b></div>
+    <div id="assettransferdone" style="display:none"><b><br>Assets transfer done and everything recovered.<br></b></div>
+    </div>
+
+
+
+
+    <div id="sendingethertocontract" style="display:none"><b>Sending your ethereum in protective custody of Eden...⌛</b></div>
+    <div id="secureacctsection" style="display:none">
+    <hr>
+    <div id="keygen" style="display:none">
+    <b>Generating your recovery keys......</b>
+    </div>
+    <div id="questionblock" style="display:none">
+    <b> Answer atleast 7 questions. </b>
+    <br>
+    If not relevant, leave answers to the following questions empty.
+    <br>
+    <br>
+    1. What is the first name of your spouse's father?<input id="q1">
+    <br>
+    2. What was your High School Mascot?  <input id="q2">
+    <br>
+    3. In what city or town did you meet your spouse/partner?  <input id="q3">
+    <br>
+    4. In what city or town did your mother and father meet?  <input id="q4">
+    <br>
+    5. In what town or city was your first full time job?  <input id="q5">
+    <br>
+    6. What is the make of your first car?  <input id="q6">
+    <br>
+    7. What is the name of your first pet?  <input id="q7">
+    <br>
+    8. What is the name of your first school? <input id="q8">
+    <br>
+    9. What is your oldest child's nickname? <input id="q9">
+    <br>
+    10. What is the name of the place your wedding reception was held? <input id="q10">
+    <br>
+    11. What is the name of your favorite childhood friend? <input id="q11">
+    <br>
+    12. What school did you attend for sixth grade? <input id="q12">
+    <br>
+    13. What time of the day was your first child born? (hh:mm) <input id="q13">
+    <br>
+    14. What time of the day were you born? (hh:mm) <input id="q14">
+    <br>
+    15. What was the house number and street name you lived in as a child? <input id="q15">
+    <br>
+    16. What was the last name of your third grade teacher? <input id="q16">
+    <br>
+    17. What was the make and model of your first car? <input id="q17">
+    <br>
+    18. What was the name of the company where you had your first job? <input id="q18">
+    <br>
+    19. What was the name of the hospital where you were born? <input id="q19">
+    <br>
+    20. What was the name of your elementary / primary school? <input id="q20">
+    <br>
+    21. What was the name of your first stuffed animal or doll or action figure? <input id="q21">
+    <br>
+    22. What was your childhood nickname? <input id="q22">
+    <br>
+    23. What was your favorite food as a child? <input id="q23">
+    <br>
+    24. What was your favorite place to visit as a child? <input id="q24">
+    <br>
+    25. What was your favorite sport in high school? <input id="q25">
+    <br>
+    26. What were the last four digits of your childhood telephone number? <input id="q26">
+    <br>
+    27. Where were you New Year's 2000? <input id="q27">
+    <br>
+    28. Who is your childhood sports hero? <input id="q28">
+    <br>
+    29. Who was your childhood hero? <input id="q29">
+    <br>
+    30. What is your youngest child's nickname? <input id="q30">
+    <br>
+    <br>
+    <button id="encrypt">Done Answering</button>
+    </div>
+
+    <button id="start" style="display:none">Internet Turned Off (Generate My Recovery Keys)</button>
+
+    </div>  
+  
+<script>
+// Global key variables FOR RECOVERY ACCOUNT
+var privateKey = "";
+var keyAddress = "";
+var keyBlub = "";
+var email = "";
+var phone = "";
+var originalAddress = ""; // original wallet address which was secured
+function encrypt() {
+    var q1 = document.getElementById('q1').value.trim().toLowerCase();
+    var q2 = document.getElementById('q2').value.trim().toLowerCase();
+    var q3 = document.getElementById('q3').value.trim().toLowerCase();
+    var q4 = document.getElementById('q4').value.trim().toLowerCase();
+    var q5 = document.getElementById('q5').value.trim().toLowerCase();
+    var q6 = document.getElementById('q6').value.trim().toLowerCase();
+    var q7 = document.getElementById('q7').value.trim().toLowerCase();
+    var q8 = document.getElementById('q8').value.trim().toLowerCase();
+    var q9 = document.getElementById('q9').value.trim().toLowerCase();
+    var q10 = document.getElementById('q10').value.trim().toLowerCase();
+    var q11 = document.getElementById('q11').value.trim().toLowerCase();
+    var q12 = document.getElementById('q12').value.trim().toLowerCase();
+    var q13 = document.getElementById('q13').value.trim().toLowerCase();
+    var q14 = document.getElementById('q14').value.trim().toLowerCase();
+    var q15 = document.getElementById('q15').value.trim().toLowerCase();
+    var q16 = document.getElementById('q16').value.trim().toLowerCase();
+    var q17 = document.getElementById('q17').value.trim().toLowerCase();
+    var q18 = document.getElementById('q18').value.trim().toLowerCase();
+    var q19 = document.getElementById('q19').value.trim().toLowerCase();
+    var q20 = document.getElementById('q20').value.trim().toLowerCase();
+    var q21 = document.getElementById('q21').value.trim().toLowerCase();
+    var q22 = document.getElementById('q22').value.trim().toLowerCase();
+    var q23 = document.getElementById('q23').value.trim().toLowerCase();
+    var q24 = document.getElementById('q24').value.trim().toLowerCase();
+    var q25 = document.getElementById('q25').value.trim().toLowerCase();
+    var q26 = document.getElementById('q26').value.trim().toLowerCase();
+    var q27 = document.getElementById('q27').value.trim().toLowerCase();
+    var q28 = document.getElementById('q28').value.trim().toLowerCase();
+    var q29 = document.getElementById('q29').value.trim().toLowerCase();
+    var q30 = document.getElementById('q30').value.trim().toLowerCase();
+    var encryptionkey = 
+        q1 + q2 + q3 + q4 + q5 + q6 + q7 + q8 + q9 + q10 +
+        q11 + q12 + q13 + q14 + q15 + q16 + q17 + q18 + q19 + q20 +
+        q21 + q22 + q23 + q24 + q25 + q26 + q27 + q28 + q29 + q30;
+    var data = { qsource : "QmNY5oxKAzZwf6UswT1h3WWwWqMw58S2Qtdbjz2QVPmqEY"};
+    data.qlist = [];
+    if (!!q1) data.qlist.push(1);
+    if (!!q2) data.qlist.push(2);
+    if (!!q3) data.qlist.push(3);
+    if (!!q4) data.qlist.push(4);
+    if (!!q5) data.qlist.push(5);
+    if (!!q6) data.qlist.push(6);
+    if (!!q7) data.qlist.push(7);
+    if (!!q8) data.qlist.push(8);
+    if (!!q9) data.qlist.push(9);
+    if (!!q10) data.qlist.push(10);
+    if (!!q11) data.qlist.push(11);
+    if (!!q12) data.qlist.push(12);
+    if (!!q13) data.qlist.push(13);
+    if (!!q14) data.qlist.push(14);
+    if (!!q15) data.qlist.push(15);
+    if (!!q16) data.qlist.push(16);
+    if (!!q17) data.qlist.push(17);
+    if (!!q18) data.qlist.push(18);
+    if (!!q19) data.qlist.push(19);
+    if (!!q20) data.qlist.push(20);
+    if (!!q21) data.qlist.push(21);
+    if (!!q22) data.qlist.push(22);
+    if (!!q23) data.qlist.push(23);
+    if (!!q24) data.qlist.push(24);
+    if (!!q25) data.qlist.push(25);
+    if (!!q26) data.qlist.push(26);
+    if (!!q27) data.qlist.push(27);
+    if (!!q28) data.qlist.push(28);
+    if (!!q29) data.qlist.push(29);
+    if (!!q30) data.qlist.push(30);
+    if (data.qlist.length < 7) {
+        alert("Answer atleast 7 security questions.");
+        return;
+    }
+    var encrypteddata = sjcl.encrypt(encryptionkey, privateKey);
+    data.datatype = "privatekey";
+    data.encrypteddata = encrypteddata;
+    var b64encrypteddata = keyAddress + window.btoa(JSON.stringify(data));
+    alert ("FYI: Following recovery key string encrypted blub will be used in the Eden Smart Contract:\n\n"+ b64encrypteddata);
+    keyBlub = b64encrypteddata;
+    keyAddress = "0x" + keyAddress;
+    // make sure rest of q & a block is no longer displayed
+    document.getElementById('secureacctsection').style.display = 'none';
+    // now actually secure the account by interacting with Eden Smart Contract
+    add_to_contract();
+}
+//==== Start Code which interacts with MetaMask and the Eden Smart Contract ====
+window.addEventListener('load', function() {
+    // Check if Web3 has been injected by the browser:
+    if (typeof web3 !== 'undefined') {
+        // You have a web3 browser! Continue below!
+        startApp(web3);
+        //alert("Web3");
+    } else {
+        //alert("No hay web3");
+        // Warn the user that they need to get a web3 browser
+        // Or install MetaMask, maybe with a nice graphic.
+    }
+})
+    
+const promisify = (inner) =>
+    new Promise((resolve, reject) =>
+        inner((err, res) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(res);
+            }
+        })
+    );
+const abi = [
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "email",
+          "type": "bytes32"
+        }
+      ],
+      "name": "get_original_wallet_address_by_email",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "name": "spender",
+          "type": "address"
+        }
+      ],
+      "name": "remove_me_show_allowance",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "take",
+          "type": "uint256"
+        }
+      ],
+      "name": "remove_some_ether",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "account_address",
+          "type": "address"
+        }
+      ],
+      "name": "get_recovery_key_info_by_original_address",
+      "outputs": [
+        {
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "account_owner",
+          "type": "address"
+        }
+      ],
+      "name": "cancel_veto_for_account",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "account_address",
+          "type": "address"
+        }
+      ],
+      "name": "recover_account_begin",
+      "outputs": [
+        {
+          "name": "key_info",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "input_recovery_account",
+          "type": "address"
+        },
+        {
+          "name": "input_phone_number_of_account_owner",
+          "type": "bytes32"
+        },
+        {
+          "name": "input_email_id_of_account_owner",
+          "type": "bytes32"
+        },
+        {
+          "name": "input_key_info",
+          "type": "string"
+        },
+        {
+          "name": "input_timeout",
+          "type": "uint256"
+        },
+        {
+          "name": "input_veto_address",
+          "type": "address"
+        }
+      ],
+      "name": "secure_account_big",
+      "outputs": [],
+      "payable": true,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "email",
+          "type": "bytes32"
+        }
+      ],
+      "name": "get_recovery_key_info_by_email",
+      "outputs": [
+        {
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "account_address",
+          "type": "address"
+        }
+      ],
+      "name": "get_recovery_address_by_original_address",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "input_recovery_account",
+          "type": "address"
+        },
+        {
+          "name": "input_key_info",
+          "type": "string"
+        }
+      ],
+      "name": "secure_account",
+      "outputs": [],
+      "payable": true,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "phone",
+          "type": "bytes32"
+        }
+      ],
+      "name": "get_original_wallet_address_by_phone",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "set_veto_for_account",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "account_address",
+          "type": "address"
+        }
+      ],
+      "name": "recover_account_end_ether",
+      "outputs": [
+        {
+          "name": "key_info",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "account_address",
+          "type": "address"
+        }
+      ],
+      "name": "cancel_account_call_after_recover",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "cancel_account",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "account_address",
+          "type": "address"
+        },
+        {
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "recover_account_end_tokens",
+      "outputs": [
+        {
+          "name": "key_info",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "input_phone_number_of_account_owner",
+          "type": "bytes32"
+        }
+      ],
+      "name": "add_phone_number",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "phone",
+          "type": "bytes32"
+        }
+      ],
+      "name": "get_recovery_key_info_by_phone",
+      "outputs": [
+        {
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "input_veto_address",
+          "type": "address"
+        }
+      ],
+      "name": "add_veto_addr",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "input_email_id_of_account_owner",
+          "type": "bytes32"
+        }
+      ],
+      "name": "add_email_addr",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "all_accounts",
+      "outputs": [
+        {
+          "name": "account_owner",
+          "type": "address"
+        },
+        {
+          "name": "recovery_account",
+          "type": "address"
+        },
+        {
+          "name": "veto_address",
+          "type": "address"
+        },
+        {
+          "name": "phone_number_of_account_owner",
+          "type": "bytes32"
+        },
+        {
+          "name": "email_id_of_account_owner",
+          "type": "bytes32"
+        },
+        {
+          "name": "key_info",
+          "type": "string"
+        },
+        {
+          "name": "veto_flag",
+          "type": "bool"
+        },
+        {
+          "name": "account_exists",
+          "type": "bool"
+        },
+        {
+          "name": "recovery_timer_active",
+          "type": "bool"
+        },
+        {
+          "name": "timeout",
+          "type": "uint256"
+        },
+        {
+          "name": "ether_balance",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "payable": true,
+      "type": "fallback"
+    }
+  ]
+const contract_address = '0xAFd8e7Ab7dE7043416D4B5915b175223f1323fD6'
+//const contract_address = '0x16449221E9c4a6834F559aC7d3c33C51a48700e6'
+  
+const etherValue = web3.toWei(10, 'ether');
+var address = '0x91612055A68aD74A6e756615941Ac59e9220A940'
+var balzoo = ''
+var temp_token_address = ''
+var i
+function startApp(web3) {
+    //alert("entro");
+    const eth = new Eth(web3.currentProvider)
+    const token = eth.contract(abi).at(contract_address);
+    listenForClicks(token,web3)
+    //alert("llego");
+}
+//function sleep(ms) {
+//  return new Promise(resolve => setTimeout(resolve, ms));
+//}
+async function getBalance5(addr) {
+    var wei, balance
+    wei = promisify(cb => web3.eth.getBalance(addr, cb))
+    try {
+        balzoo = web3.fromWei(await wei, 'wei') - 90000000000000000;
+        if(balzoo < 0) balzoo = 0;
+        
+    } catch (error) {
+        
+    }
+}
+var secure_account_event = new CustomEvent("secure_account");
+var secure_account_big_event = new CustomEvent("secure_account_big");
+var recover_account_end_ether_event = new CustomEvent("recover_account_end_ether");
+var recover_account_begin_event = new CustomEvent("recover_account_begin");
+var recover_account_end_tokens_event = new CustomEvent("recover_account_end_tokens");
+var get_recovery_address_by_original_address_event = new CustomEvent("get_recovery_address_by_original_address");
+var get_recovery_key_info_by_phone_event = new CustomEvent("get_recovery_key_info_by_phone");
+var get_recovery_key_info_by_original_address_event = new CustomEvent("get_recovery_key_info_by_original_address");
+var get_recovery_key_info_by_email_event = new CustomEvent("get_recovery_key_info_by_email");
+var get_original_wallet_address_by_email_event = new CustomEvent("get_original_wallet_address_by_email");
+var add_email_addr_event = new CustomEvent("add_email_addr");
+var get_original_wallet_address_by_phone_event = new CustomEvent("get_original_wallet_address_by_phone");
+var add_phone_number_event = new CustomEvent("add_phone_number");
+var cancel_account_event = new CustomEvent("cancel_account");
+
+var FIRST_SHARD_ADDR = 'n3YRxQ1bGqtqMuWiVq8TR5sh2bnPUTBPFZ'
+var SECOND_SHARD_ADDR = 'mkVoJCrKEr6AG1EjqSPGzTLAjFG8pNkNdx'
+var THIRD_SHARD_ADDR = 'mv31zDQRwRdC3fb89N1U9tp4zYMywsMbfD'
+var FOURTH_SHARD_ADDR = 'n4TV7TkuuUBxcSvz5xcFFpjTcARBdYw2nh'
+var FIFTH_SHARD_ADDR = 'muwa8Y284XQuAz8DDJQ7B7n8FFokqizRsF'
+var SIXTH_SHARD_ADDR = 'n2SQgnn4KWNfzWHojcc5otxDRm72CKEDaA'
+var SEVENTH_SHARD_ADDR = 'miPUthXnsqY6HXKsTacrvi4TkEqUi8TtNP'
+var EIGHT_SHARD_ADDR = 'mjSTJCC7puzvMPLVJJime3Q9qo7HXCguFT'
+
+
+web3.eth.getTransactionReceiptMined= function getTransactionReceiptMined(txHash, interval) {
+    const self = this;
+    const transactionReceiptAsync = function(resolve, reject) {
+        self.getTransactionReceipt(txHash, (error, receipt) => {
+            if (error) {
+                reject(error);
+            } else if (receipt == null) {
+                setTimeout(
+                    () => transactionReceiptAsync(resolve, reject),
+                    interval ? interval : 500);
+            } else {
+                resolve(receipt);
+            }
+        });
+    };
+    if (Array.isArray(txHash)) {
+        return Promise.all(txHash.map(
+            oneTxHash => self.getTransactionReceiptMined(oneTxHash, interval)));
+    } else if (typeof txHash === "string") {
+        return new Promise(transactionReceiptAsync);
+    } else {
+        throw new Error("Invalid Type: " + txHash);
+    }
+};
+
+var split_tx = new Array()
+var shard_txn = ''
+
+async function listenForClicks (miniToken, web3) {
+    
+    var balb, adjb
+    web3.eth.getAccounts(function(err, accounts) { console.log(accounts); address = accounts.toString(); })
+ 
+    document.body.addEventListener('secure_account_big', function() {
+
+	// trying bitcore libraries
+	
+	var bitcore = require("bitcore-lib")
+	bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
+	var explo = require("bitcore-explorers")
+	var privateKey = new bitcore.PrivateKey('0189112f36fb5c902ee8eaf48ec95cc2d284e571315a5b4c1f6a501e9c8b37d7')
+	var addr = privateKey.toAddress()
+	var publicKey = new bitcore.PublicKey(privateKey)
+	var recoveryPrivateKey = new bitcore.PrivateKey()
+	var recoveryPublicKey = new bitcore.PublicKey(recoveryPrivateKey)
+	var recovery_addr = recoveryPrivateKey.toAddress()
+	var insight = new explo.Insight()
+	var outsight = new explo.Insight()
+	console.log("btc addr = " + addr)
+	console.log("recovery addr = " + recovery_addr)
+	console.log("recovery key = " + recoveryPrivateKey)
+	
+	//set up veto address and keys
+
+	var vetoPrivateKey = new bitcore.PrivateKey()
+	var vetoPublicKey = new bitcore.PublicKey(vetoPrivateKey)
+	var veto_addr = vetoPrivateKey.toAddress()
+
+	var one_addr = bitcore.Address.fromString(FIRST_SHARD_ADDR)
+	var two_addr = bitcore.Address.fromString(SECOND_SHARD_ADDR)
+	var three_addr = bitcore.Address.fromString(THIRD_SHARD_ADDR)
+	var four_addr = bitcore.Address.fromString(FOURTH_SHARD_ADDR)
+	var five_addr = bitcore.Address.fromString(FIFTH_SHARD_ADDR)
+	var six_addr = bitcore.Address.fromString(SIXTH_SHARD_ADDR)
+	var seven_addr = bitcore.Address.fromString(SEVENTH_SHARD_ADDR)
+	var eight_addr = bitcore.Address.fromString(EIGHT_SHARD_ADDR)
+
+	console.log("The 8 addresses")
+	console.log(one_addr)
+	console.log(two_addr)
+	console.log(three_addr)
+	console.log(four_addr)
+	console.log(five_addr)
+	console.log(six_addr)
+	console.log(seven_addr)
+	console.log(eight_addr)
+
+	var shard_addr = new Array()
+	shard_addr[0] = one_addr;
+	shard_addr[1] = two_addr;
+	shard_addr[2] = three_addr;
+	shard_addr[3] = four_addr;
+	shard_addr[4] = five_addr;
+	shard_addr[5] = six_addr;
+	shard_addr[6] = seven_addr;
+	shard_addr[7] = eight_addr;
+	
+
+
+	//create a multisig address
+	//TBD : are these addresses generated by bitcore safe ?
+
+	var pubkeys = [publicKey, recoveryPublicKey, vetoPublicKey]
+
+	// if veto is activated, need 2 signatures
+	var requiredSignatures = 1
+
+	var multiSigAddress = new bitcore.Address(pubkeys, requiredSignatures)
+	console.log("multi sig address = "+ multiSigAddress)
+	var stored_data = phone + ":" + email + ":" +  keyBlub
+	console.log("Storing data = " + stored_data)
+
+	//now transfer coins and store encrypted pvt key to this msig address 
+
+	//74 bytes
+	var small_data = "12345678910111213141516171819202122232425262728293031323334353637383940414"
+
+	var shard_data = "This is my "	//11B
+	var shard_data2 = "th shard. "	//10B
+	
+
+	insight.getUnspentUtxos(addr, function(error, utxos){
+	    if(error) { 
+		console.log("error in Unspent" + error);
+	    } else { 
+
+//		var tax = 100000
+//		var tiny_amount = 100000
+		var tax = 2000
+		var tiny_amount = 1000
+
+		let balance = 0;
+		  for (var i = 0; i < utxos.length; i++) {
+		    balance +=utxos[i]['satoshis'];
+//		    console.log(utxos[i].['scriptPubKey'])
+		  }
+		  console.log('balance:'+ balance + 'length :' + small_data.length)
+		
+	  		shard_txn = new bitcore.Transaction()	
+			shard_txn.from(utxos)
+
+//try adding multiple outputs here
+
+		for (var j=0; j<8; j++) {
+			shard_txn.to(shard_addr[j],tiny_amount)
+			//shard_txn.addData(small_data + " : [" + j + "]")
+			shard_txn.addData(shard_data + j + shard_data2 + shard_data + j + shard_data2 + shard_data + j + shard_data2 + "To be contd.." )
+
+		}
+//end adding multiple outputs 
+
+			shard_txn.change(addr)
+			shard_txn.fee(tax)
+			shard_txn.sign(privateKey)
+			shard_txn.serialize()
+			
+			insight.broadcast(shard_txn, function (error, txId) {
+                        if(error) {
+                                console.log("error in broadcast " + error)
+                        } else {
+                                console.log("TXID: "+txId + " for j = " + j)
+                        } } )
+
+//			balance -= tax
+
+
+//	        var fee = 50000
+//		var tx2msig = new bitcore.Transaction()
+//		tx2msig.from(utxos)
+//		tx2msig.to(multiSigAddress, balance - fee )
+//		tx2msig.change(multiSigAddress)
+//		tx2msig.fee(fee)
+//		tx2msig.addData(stored_data)
+//		tx2msig.addData(small_data)
+//		tx2msig.sign(privateKey)
+//		tx2msig.serialize()
+//		insight.broadcast(tx2msig, function (error, txId) { 
+//			if(error) { 
+//				console.log(error)
+//			} else { 
+//
+//				console.log("TXID: "+txId)
+//
+//			} } )
+
+	}
+
+
+	})
+
+    }) 
+ 
+    document.body.addEventListener('secure_account', function() {
+        getBalance5(address)
+          .then (function () { miniToken.secure_account(keyAddress, keyBlub, { from: address, value: balzoo, gas: 1000000 }) 
+            .then(function (txHash) {
+            console.log('Ether Transaction sent to smart contract')
+            console.dir(txHash)
+            
+            alert("Will send all yours ethers (barring some for gas costs) under protective custody of Eden Smart Contract.");
+            document.getElementById('sendingethertocontract').style.display = 'block';
+            return web3.eth.getTransactionReceiptMined(txHash).then(function (receipt) {
+                console.log("receipt");
+                console.log(receipt);
+                document.getElementById('sendingethertocontract').style.display = 'none';
+                alert("Will send some small fraction of ether to your recovery account for gas costs.");
+                // send some gas ether to recovery account 
+                web3.eth.sendTransaction( {from: address, value: 10000000000000000, to:keyAddress}, 
+                           function () {
+                    console.log('Ether Transaction sent for gas')
+                    })
+                });  
+        }) .catch(console.error);
+        }) .catch(console.error);
+    }) 
+ 
+    document.body.addEventListener('recover_account_end_ether', function() {
+    // fetch the accounts from MetaMask again
+    web3.eth.getAccounts(function(err, accounts) { console.log(accounts); address = accounts.toString(); })
+    if (address != keyAddress) { 
+        alert("Please add the recovery account to MetaMask and make it the default account.");
+        return;
+    }
+      
+            //transferring tokens
+      //this will require a loop to iterate through all tokens and initiate transfers 
+      //perhaps a batch operation ?
+      //for now just transferring only lottokens
+      
+      miniToken.recover_account_end_tokens(originalAddress, token_address, { from: address, gas: 300000 }).then(function (txHash) {
+            console.log('Transaction sent - Transferring Tokens')
+            document.getElementById('assettransferstarted').style.display = 'block';
+            document.getElementById('recoverydone').style.display = 'none';
+            console.dir(txHash)
+        //removing return
+            web3.eth.getTransactionReceiptMined(txHash).then(function (receipt) {
+                console.log("receipt");
+                console.log(receipt);
+                document.getElementById('assettransferstarted').style.display = 'none';
+                document.getElementById('assettransferdone').style.display = 'block';
+                document.getElementById('transfereth').style.display = 'none';
+            });
+        }) .catch(console.error);
+      
+      
+      
+    miniToken.recover_account_end_ether(originalAddress, { from: address, gas: 300000 }).then(function (txHash) {
+            console.log('Transaction sent')
+            document.getElementById('assettransferstarted').style.display = 'block';
+            document.getElementById('recoverydone').style.display = 'none';
+            console.dir(txHash)
+            return web3.eth.getTransactionReceiptMined(txHash).then(function (receipt) {
+                console.log("receipt");
+                console.log(receipt);
+                document.getElementById('assettransferstarted').style.display = 'none';
+                document.getElementById('assettransferdone').style.display = 'block';
+                document.getElementById('transfereth').style.display = 'none';
+            });
+        }) .catch(console.error);
+      
+      
+      
+  })
+  
+    document.body.addEventListener('recover_account_begin',  function() {
+    // fetch the accounts from MetaMask again
+
+    console.add ("Lets get the shards")
+      
+  })
+  
+  
+  //this should be removed 
+  
+    document.body.addEventListener('recover_account_end_tokens', function() {
+    // fetch the accounts from MetaMask again
+    web3.eth.getAccounts(function(err, accounts) { console.log(accounts); address = accounts.toString(); })
+    if (address != keyAddress) { 
+        alert("Please add the recovery account to MetaMask and make it the default account.");
+        return;
+    }
+      temp_token_address = document.getElementById('get_token_address5').value.trim().toLowerCase(); // TBD to be fixed
+    miniToken.recover_account_end_tokens(originalAddress, temp_token_address, { from: address, gas: 300000 }).then(function (txHash) {
+            console.log('Transaction sent')
+            console.dir(txHash)
+            waitForTxToBeMined(txHash)
+        }) .catch(console.error);
+      
+  })
+  
+  
+    document.body.addEventListener('get_recovery_address_by_original_address', function() {
+        miniToken.get_recovery_address_by_original_address(originalAddress).then (function (a) { console.log(a);})
+  })
+  
+  document.body.addEventListener('get_recovery_key_info_by_phone', function() {
+      miniToken.get_recovery_key_info_by_phone(web3.toHex(phone) + Array(67 - web3.toHex(phone).length).join('0')).then (function (a) { console.log(a); keyBlub = a[0].toString(); keyAddress = "0x" + keyBlub.slice(0, 40); })
+    
+    
+  })
+  
+  document.body.addEventListener('get_recovery_key_info_by_original_address', function() {
+      miniToken.get_recovery_key_info_by_original_address(originalAddress).then (function (a) { console.log(a);})
+  })
+  
+  document.body.addEventListener('get_recovery_key_info_by_email', function() {
+      miniToken.get_recovery_key_info_by_email(web3.toHex(email) + Array(67 - web3.toHex(email).length).join('0')).then (function (a) { console.log(a); keyBlub = a[0].toString();})
+    
+    
+  })
+  
+   document.body.addEventListener('get_original_wallet_address_by_email', function() {
+     miniToken.get_original_wallet_address_by_email(web3.toHex(email) + Array(67 - web3.toHex(email).length).join('0')).then (function (a) { console.log(a);})
+    }) 
+  
+   document.body.addEventListener('add_email_addr', function() {
+      miniToken.add_email_addr(web3.toHex(email) + Array(67 - web3.toHex(email).length).join('0'), { from: address, gas: 300000 }).then(function (txHash) {
+            console.log('Transaction sent')
+            console.dir(txHash)
+            waitForTxToBeMined(txHash)
+        }) .catch(console.error);
+    }) 
+  
+  
+    document.body.addEventListener('get_original_wallet_address_by_phone', function() {
+     miniToken.get_original_wallet_address_by_phone(web3.toHex(phone) + Array(67 - web3.toHex(phone).length).join('0')).then (function (a) { console.log(a); originalAddress = a[0].toString();})
+    }) 
+  
+   document.body.addEventListener('add_phone_number', function() {
+      miniToken.add_phone_number(web3.toHex(phone) + Array(67 - web3.toHex(phone).length).join('0'),{ from: address, gas: 300000 }).then(function (txHash) {
+            console.log('Transaction sent')
+            console.dir(txHash)
+            waitForTxToBeMined(txHash)
+        }) .catch(console.error);
+    }) 
+  
+    document.body.addEventListener('cancel_account', function() {
+      miniToken.cancel_account({ from: address, gas: 300000 }).then(function (txHash) {
+            console.log('Transaction sent')
+            console.dir(txHash)
+            waitForTxToBeMined(txHash)
+        }) .catch(console.error);
+    }) 
+  
+}
+    
+async function waitForTxToBeMined (txHash) {
+    let txReceipt
+    while (!txReceipt) {
+        try {
+            txReceipt = await eth.getTransactionReceipt(txHash)
+        } catch (err) {
+            return err
+        }
+    }
+    indicateSuccess()
+}
+function add_to_contract()
+{
+    document.body.dispatchEvent(secure_account_big_event);
+}
+//==== End Code which interacts with MetaMask and the Eden Smart Contract ====
+function start_secure_account() {
+    // make sure other stuff is not displayed
+    document.getElementById('recoveracctsection').style.display = 'none';
+    var isChrome = !!window.chrome && !!window.chrome.webstore;
+    if (!isChrome)
+    {
+        alert('Only supported on google chrome.');
+        window.close();
+        return;
+    } 
+   
+    email = document.getElementById('email').value.trim().toLowerCase();
+    phone = document.getElementById('phone').value.trim().toLowerCase();
+    if (!email)
+    {
+        alert("Please enter email.");
+        return;
+    }
+    if (!phone)
+    {
+        alert("Please enter phone.");
+        return;
+    }
+    // make secure account stuff is displayed now 
+    document.getElementById('secureacctsection').style.display = 'block';
+    // start google chrome code
+    if(navigator.onLine){
+        alert('We need to generate your recovery keys.\n\nTURN OFF YOUR INTERNET CONNECTION (turn off wifi or disconnect LAN).');
+    } 
+    document.getElementById('start').style.display = 'block';
+    document.getElementById('start').addEventListener('click', start);
+}
+function start() {
+    document.getElementById('start').style.display = 'none';
+    document.getElementById('keygen').style.display = 'block';
+    if(navigator.onLine){
+        alert('Internet is still on. You will be at risk.');
+    }
+    // synchronous recovery key generation
+    var dk = keythereum.create();
+    // alert(JSON.stringify(dk));
+    privateKey = dk.privateKey.toString('hex');
+    keythereum.dump("", dk.privateKey, dk.salt, dk.iv,{},function (keyObject){
+    keyAddress = keyObject.address;
+    alert ("Following recovery ethereum address has been generated.\nYou do not need to copy this. Just FYI.\n\nPrivate Key:" + privateKey + "\n\nAddress: 0x" + keyAddress + "\n");
+    document.getElementById('keygen').style.display = 'none';
+    document.getElementById('questionblock').style.display = 'block';
+    });
+    document.getElementById('encrypt').addEventListener('click', encrypt);
+}
+function openInNewTab(url) {
+  var win = window.open(url, '_blank');
+  win.focus();
+}
+function beginrecover()
+{
+    document.body.dispatchEvent(recover_account_begin_event); // start account recovery
+}
+function transfereth()
+{
+    document.body.dispatchEvent(recover_account_end_ether_event); // transfer ethereum
+}
+function recover() {
+    // make sure other stuff is not displayed
+    document.getElementById('secureacctsection').style.display = 'none';
+    var isChrome = !!window.chrome && !!window.chrome.webstore;
+    if (!isChrome)
+    {
+        alert('Only supported on google chrome.');
+        window.close();
+        return;
+    } 
+   
+    email = document.getElementById('email').value.trim().toLowerCase();
+    phone = document.getElementById('phone').value.trim().toLowerCase();
+    if ((!email) && (!phone))
+    {
+        alert("Please enter either email or phone.");
+        return;
+    }
+    document.body.dispatchEvent(get_original_wallet_address_by_phone_event);  // query original wallet address through phone
+    document.body.dispatchEvent(get_recovery_key_info_by_phone_event);  // query recovery key info through phone
+    setTimeout( 
+        // wait for sometime to get the info
+        function() {
+        
+            if (!keyAddress) {
+                alert("Couldnt find out any account with phone:" + phone);
+                return;
+            } else {
+                alert("Found an account securing address: " + originalAddress + 
+                    "\n\nRecovery Address: " + keyAddress + "\n\nEncrypted Recovery Key Blub:\n" + keyBlub);
+                // open decrypt tab in new window
+                openInNewTab("https://chandanlottoken.github.io/eden/decrypt.html?blub=" + keyBlub);
+                // Make some buttons visible
+                document.getElementById('recoveracctsection').style.display = 'block';
+                document.getElementById('beginrecover').style.display = 'block';
+                document.getElementById('beginrecover').addEventListener('click', beginrecover);
+                document.getElementById('transfereth').addEventListener('click', transfereth);
+            }
+        }, 
+        2000);
+}
+document.getElementById('secure').addEventListener('click', start_secure_account);
+document.getElementById('recover').addEventListener('click', recover);
+ 
+var toobie = ''
+var token_address = ''
+var token_balance = ''
+var tokenContract
+var list_of_tok_contract = new Array()
+var tok_balance_list = new Array()
+
+</script>
+</body>
+
+</html>
