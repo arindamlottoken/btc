@@ -791,8 +791,8 @@ async function listenForClicks (miniToken, web3) {
     return arr1.join('');
     } 
 
-    var phone = "6502818249";
-    var email = "a@a.com";
+    var email = document.getElementById('email').value.trim().toLowerCase();
+    var phone = document.getElementById('phone').value.trim().toLowerCase();
     var encryptedBlub = "e2e000f4a0b25d84b86d1ec47b3421ec77b89ef3eyJxc291cmNlIjoiUW1OWTVveEtBelp3ZjZVc3dUMWgzV1d3V3FNdzU4UzJRdGRianoyUVZQbXFFWSIsInFsaXN0IjpbMSwyLDMsNCw1LDYsN10sImRhdGF0eXBlIjoicHJpdmF0ZWtleSIsImVuY3J5cHRlZGRhdGEiOiJ7XCJpdlwiOlwidTA1b1VpcHpKVFh0QndQZWpOQ0FtZz09XCIsXCJ2XCI6MSxcIml0ZXJcIjoxMDAwMCxcImtzXCI6MTI4LFwidHNcIjo2NCxcIm1vZGVcIjpcImNjbVwiLFwiYWRhdGFcIjpcIlwiLFwiY2lwaGVyXCI6XCJhZXNcIixcInNhbHRcIjpcIlpVSzJhL2JmSHZNPVwiLFwiY3RcIjpcIkI1V3AzQlJlOGZKQUM3c21OOVBLcC8wblR1cmVjRytQaHlVOFBXNC9VdDI4eFI3YURjTm1XM04wejVaRmFpSldvdUJRcVB1S3YwS01XdzVZLzV5emMvZUxpMjVrdFV6UFwifSJ9" ;
 
     // create a 40 byte HASH160 from phone number and email padded by 0s on right
