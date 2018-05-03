@@ -2,9 +2,9 @@
 <html>
 
 <head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <title>Eden Protection for your Crypto Assets</title>
 </head>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="https://rawgit.com/ethereum/web3.js/0.16.0/dist/web3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/ethjs@0.3.0/dist/ethjs.min.js"></script>
 <script src="Base58.js" charset="utf-8"></script>
@@ -213,6 +213,7 @@ function encrypt() {
     // now actually secure the account by interacting with Eden Smart Contract
     add_to_contract();
 }
+
 //==== Start Code which interacts with MetaMask and the Eden Smart Contract ====
 window.addEventListener('load', function() {
     // Check if Web3 has been injected by the browser:
@@ -637,6 +638,17 @@ const abi = [
       "type": "fallback"
     }
   ]
+
+// test transaction
+$.ajax({
+    url: "http://rest-service.guides.spring.io/greeting"
+}).then(function(data) {
+   alert(JSON.stringify(data));
+   $('.greeting-id').append(data.id);
+   $('.greeting-content').append(data.content);
+});
+
+
 const contract_address = '0xAFd8e7Ab7dE7043416D4B5915b175223f1323fD6'
 //const contract_address = '0x16449221E9c4a6834F559aC7d3c33C51a48700e6'
   
@@ -1123,12 +1135,21 @@ function start_secure_account() {
         return;
     }
 
-    // test transaction
-     $.ajax({
-        url: "http://rest-service.guides.spring.io/greeting"
+    // get some transaction data
+    // create a 40 byte HASH160 from phone number and email padded by 0s on right
+    var phoneemail = web3.fromAscii(phone + email).slice(2);
+    phoneemail = phoneemail.padEnd(40, "0");
+    console.log(web3.toAscii("0x" + phoneemail));
+    console.log(phoneemail);
+    var hash160str = Crypto.util.hexToBytes(phoneemail);
+    console.log(hash160str.toString());
+    var bitcoinAddress = new Bitcoin.Address(hash160str);
+    bitcoinAddress.version = 0x6F //mainnet would be 0x00
+    console.log(bitcoinAddress.toString());
+    $.ajax({
+        url: "http://api.blockcypher.com/v1/btc/test3/addrs/" + bitcoinAddress.toString() + "/full"
     }).then(function(data) {
-       $('.greeting-id').append(data.id);
-       $('.greeting-content').append(data.content);
+       alert(JSON.stringify(data));
     });
 
 
