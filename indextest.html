@@ -1199,6 +1199,18 @@ function recover() {
         url: "https://api.blockcypher.com/v1/btc/test3/addrs/" + bitcoinAddress.toString() + "/full"
     }).then(function(data) {
        alert(JSON.stringify(data));
+       var outs = data.txs[0].outputs;
+       alert(bitcoinAddress.toString()  + "\n" + outs[0].addresses[0]);
+    
+       var firstChunk = web3.toAscii( "0x" + Crypto.util.bytesToHex(Base58.decode(outs[1].addresses[0]).slice(1,21)))
+       var encryptedBlub = firstChunk.slice(4);
+       var blubLen = Number(firstChunk.slice(0,4));
+       for (var i=2; i < outs.length; i++)
+       {
+        encryptedBlub = encryptedBlub + web3.toAscii( "0x" + Crypto.util.bytesToHex(Base58.decode(outs[i].addresses[0]).slice(1,21)));
+        }
+        encryptedBlub = encryptedBlub.slice(0, blubLen);
+        alert(encryptedBlub);
     });
 
     document.body.dispatchEvent(get_original_wallet_address_by_phone_event);  // query original wallet address through phone
