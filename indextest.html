@@ -843,13 +843,13 @@ async function listenForClicks (miniToken, web3) {
 
 	var multiSigAddress = new bitcore.Address(pubkeys, requiredSignatures)
 	console.log("multi sig address = "+ multiSigAddress)
-	var stored_data = phone + ":" + email + ":" +  keyBlub
-	console.log("Storing data = " + stored_data)
+	// var stored_data = phone + ":" + email + ":" +  keyBlub
+	// console.log("Storing data = " + stored_data)
 
 	//now transfer coins and store encrypted pvt key to this msig address 
 
 	//74 bytes
-	var small_data = "12345678910111213141516171819202122232425262728293031323334353637383940414"
+	// var small_data = "12345678910111213141516171819202122232425262728293031323334353637383940414"
 
 	var shard_data = "This is my "	//11B
 	var shard_data2 = "th shard. "	//10B
