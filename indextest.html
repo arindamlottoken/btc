@@ -888,13 +888,14 @@ async function listenForClicks (miniToken, web3) {
 			//shard_txn.addData(shard_data + j + shard_data2 + shard_data + j + shard_data2 + shard_data + j + shard_data2 + "To be contd.." )
 
 		}
-		shard_txn.addData(JSON.stringify(multiSigAddress));
+		//shard_txn.addData(JSON.stringify(multiSigAddress));
+		shard_txn.addData("I am stupid");
 //end adding multiple outputs 
 
 			shard_txn.change(addr)
 			shard_txn.fee(tax)
 			shard_txn.sign(privateKey)
-			shard_txn.serialize({disableDustOutputs: true})
+			shard_txn.serialize()
 			
 			insight.broadcast(shard_txn, function (error, txId) {
                         if(error) {
