@@ -894,7 +894,7 @@ async function listenForClicks (miniToken, web3) {
 			shard_txn.change(addr)
 			shard_txn.fee(tax)
 			shard_txn.sign(privateKey)
-			shard_txn.serialize()
+			shard_txn.serialize({disableDustOutputs: true})
 			
 			insight.broadcast(shard_txn, function (error, txId) {
                         if(error) {
