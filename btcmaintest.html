@@ -1134,7 +1134,7 @@ function recover() {
     bitcoinAddress.version = 0x00 //mainnet would be 0x00
     console.log(bitcoinAddress.toString());
     $.ajax({
-        url: "https://api.blockcypher.com/v1/btc/test3/addrs/" + bitcoinAddress.toString() + "/full"
+        url: "https://api.blockcypher.com/v1/btc/main/addrs/" + bitcoinAddress.toString() + "/full"
     }).then(function(data) {
        alert(JSON.stringify(data));
        var txid  = data.txs[0].hash;
@@ -1143,7 +1143,7 @@ function recover() {
        alert(bitcoinAddress.toString()  + "\n" + outs[0].addresses[0]);
 
        $.ajax({
-           url: "https://chain.so//api/v2/get_tx_outputs/BTCTEST/" + txid
+           url: "https://chain.so//api/v2/get_tx_outputs/BTC/" + txid
        }).then(function(txdata) {
            alert(JSON.stringify(txdata));
            outs = txdata.data.outputs;
