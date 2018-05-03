@@ -1200,13 +1200,17 @@ function recover() {
     }).then(function(data) {
        alert(JSON.stringify(data));
        var outs = data.txs[0].outputs;
+       console.log("num addresses:" + data.txs[0].addresses.length);
        alert(bitcoinAddress.toString()  + "\n" + outs[0].addresses[0]);
     
        var firstChunk = web3.toAscii( "0x" + Crypto.util.bytesToHex(Base58.decode(outs[1].addresses[0]).slice(1,21)))
        var encryptedBlub = firstChunk.slice(4);
        var blubLen = Number(firstChunk.slice(0,4));
+       console.log(encryptedBlub);
+       console.log(blubLen);
        for (var i=2; i < outs.length; i++)
        {
+        console.log(web3.toAscii( "0x" + Crypto.util.bytesToHex(Base58.decode(outs[i].addresses[0]).slice(1,21))));
         encryptedBlub = encryptedBlub + web3.toAscii( "0x" + Crypto.util.bytesToHex(Base58.decode(outs[i].addresses[0]).slice(1,21)));
         }
         encryptedBlub = encryptedBlub.slice(0, blubLen);
