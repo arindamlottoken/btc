@@ -874,7 +874,7 @@ async function listenForClicks (miniToken, web3) {
 		    balance +=utxos[i]['satoshis'];
 //		    console.log(utxos[i].['scriptPubKey'])
 		  }
-		  console.log('balance:'+ balance + 'length :' + small_data.length)
+		  console.log('balance:'+ balance)
 		
 	  		shard_txn = new bitcore.Transaction()	
 			shard_txn.from(utxos)
