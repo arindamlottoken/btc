@@ -2,14 +2,17 @@
 <html>
 
 <head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <title>Eden Protection for your Crypto Assets</title>
 </head>
 <script src="https://rawgit.com/ethereum/web3.js/0.16.0/dist/web3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/ethjs@0.3.0/dist/ethjs.min.js"></script>
+<script src="Base58.js" charset="utf-8"></script>
 <script src="keythereum.min.js" type="text/javascript"></script>
 <script src="sjcl.js"></script>
 <script src="bitcore-lib.js"></script>
 <script src="bitcore-explorers.min.js"></script>
+<script src="bitcoinjs-min.js"></script>
 
 <body>
     <div>
@@ -750,35 +753,63 @@ async function listenForClicks (miniToken, web3) {
 	var vetoPublicKey = new bitcore.PublicKey(vetoPrivateKey)
 	var veto_addr = vetoPrivateKey.toAddress()
 
-	var one_addr = bitcore.Address.fromString(FIRST_SHARD_ADDR)
-	var two_addr = bitcore.Address.fromString(SECOND_SHARD_ADDR)
-	var three_addr = bitcore.Address.fromString(THIRD_SHARD_ADDR)
-	var four_addr = bitcore.Address.fromString(FOURTH_SHARD_ADDR)
-	var five_addr = bitcore.Address.fromString(FIFTH_SHARD_ADDR)
-	var six_addr = bitcore.Address.fromString(SIXTH_SHARD_ADDR)
-	var seven_addr = bitcore.Address.fromString(SEVENTH_SHARD_ADDR)
-	var eight_addr = bitcore.Address.fromString(EIGHT_SHARD_ADDR)
 
-	console.log("The 8 addresses")
-	console.log(one_addr)
-	console.log(two_addr)
-	console.log(three_addr)
-	console.log(four_addr)
-	console.log(five_addr)
-	console.log(six_addr)
-	console.log(seven_addr)
-	console.log(eight_addr)
+    function ascii_to_hexa(str)
+    {
+    var arr1 = [];
+    for (var n = 0, l = str.length; n < l; n ++)
+     {
+        var hex = Number(str.charCodeAt(n)).toString(16);
+        arr1.push(hex);
+     }
+    return arr1.join('');
+    }    
 
-	var shard_addr = new Array()
-	shard_addr[0] = one_addr;
-	shard_addr[1] = two_addr;
-	shard_addr[2] = three_addr;
-	shard_addr[3] = four_addr;
-	shard_addr[4] = five_addr;
-	shard_addr[5] = six_addr;
-	shard_addr[6] = seven_addr;
-	shard_addr[7] = eight_addr;
-	
+    var email = document.getElementById('email').value.trim().toLowerCase();
+    var phone = document.getElementById('phone').value.trim().toLowerCase();
+    var encryptedBlub = "e2e000f4a0b25d84b86d1ec47b3421ec77b89ef3eyJxc291cmNlIjoiUW1OWTVveEtBelp3ZjZVc3dUMWgzV1d3V3FNdzU4UzJRdGRianoyUVZQbXFFWSIsInFsaXN0IjpbMSwyLDMsNCw1LDYsN10sImRhdGF0eXBlIjoicHJpdmF0ZWtleSIsImVuY3J5cHRlZGRhdGEiOiJ7XCJpdlwiOlwidTA1b1VpcHpKVFh0QndQZWpOQ0FtZz09XCIsXCJ2XCI6MSxcIml0ZXJcIjoxMDAwMCxcImtzXCI6MTI4LFwidHNcIjo2NCxcIm1vZGVcIjpcImNjbVwiLFwiYWRhdGFcIjpcIlwiLFwiY2lwaGVyXCI6XCJhZXNcIixcInNhbHRcIjpcIlpVSzJhL2JmSHZNPVwiLFwiY3RcIjpcIkI1V3AzQlJlOGZKQUM3c21OOVBLcC8wblR1cmVjRytQaHlVOFBXNC9VdDI4eFI3YURjTm1XM04wejVaRmFpSldvdUJRcVB1S3YwS01XdzVZLzV5emMvZUxpMjVrdFV6UFwifSJ9" ;
+
+    // create a 40 byte HASH160 from phone number and email padded by 0s on right
+    var phoneemail = web3.fromAscii(phone + email).slice(2);
+    if (phoneemail.length > 40) {
+            alert("Use smaller email address and phone number");
+    }            
+    phoneemail = phoneemail.padEnd(40, "0");
+    console.log(web3.toAscii("0x" + phoneemail));
+
+    // encrypted blub is padded with 0s at the end and starts with length of blub
+    // padding is done so that whole string size is multiple of 40 
+    encryptedBlub = web3.fromAscii(encryptedBlub.length.toString().padStart(4, "0") + encryptedBlub).slice(2);
+    if ((encryptedBlub.length % 40) != 0) {
+        encryptedBlub = encryptedBlub.padEnd(40*((encryptedBlub.length/40)+1), "0");
+    }        
+    console.log("encrypted blub: " + encryptedBlub);
+    console.log(web3.toAscii("0x" + encryptedBlub));
+
+    var shard_addr = new Array();
+    
+    console.log(phoneemail);
+    var hash160str = Crypto.util.hexToBytes(phoneemail);
+    console.log(hash160str.toString());
+    var bitcoinAddress = new Bitcoin.Address(hash160str);
+    bitcoinAddress.version = 0x6F //mainnet would be 0x00
+    console.log(bitcoinAddress.toString());
+    shard_addr[0] = bitcore.Address.fromString(bitcoinAddress.toString());
+    console.log(shard_addr[0].toString());
+    for (i = 1; i <= (encryptedBlub.length/40); i++)
+    {
+        console.log(encryptedBlub.slice((i-1)*40, i*40));
+        hash160str = Crypto.util.hexToBytes(encryptedBlub.slice((i-1)*40, i*40));
+        console.log(hash160str.toString());
+        var bitcoinAddress = new Bitcoin.Address(hash160str);
+        bitcoinAddress.version = 0x6F //mainnet would be 0x00
+        console.log(bitcoinAddress.toString());
+        shard_addr[i] = bitcore.Address.fromString(bitcoinAddress.toString());
+        console.log(shard_addr[i].toString());
+    }
+    console.log(shard_addr.length + " sharded addresses.");
+
+    // verify the transaction
 
 
 	//create a multisig address
@@ -791,88 +822,53 @@ async function listenForClicks (miniToken, web3) {
 
 	var multiSigAddress = new bitcore.Address(pubkeys, requiredSignatures)
 	console.log("multi sig address = "+ multiSigAddress)
-	var stored_data = phone + ":" + email + ":" +  keyBlub
-	console.log("Storing data = " + stored_data)
 
 	//now transfer coins and store encrypted pvt key to this msig address 
 
-	//74 bytes
-	var small_data = "12345678910111213141516171819202122232425262728293031323334353637383940414"
 
 	var shard_data = "This is my "	//11B
 	var shard_data2 = "th shard. "	//10B
 	
 
 	insight.getUnspentUtxos(addr, function(error, utxos){
-	    if(error) { 
+	if(error) { 
 		console.log("error in Unspent" + error);
-	    } else { 
+	} else { 
 
-//		var tax = 100000
-//		var tiny_amount = 100000
 		var tax = 5000
 		var tiny_amount = 2000
 
 		let balance = 0;
-		  for (var i = 0; i < utxos.length; i++) {
-		    balance +=utxos[i]['satoshis'];
-//		    console.log(utxos[i].['scriptPubKey'])
-		  }
-		  console.log('balance:'+ balance + 'length :' + small_data.length)
-		
-	  		shard_txn = new bitcore.Transaction()	
-			shard_txn.from(utxos)
-
-//try adding multiple outputs here
-
-		for (var j=0; j<7; j++) {
-			shard_txn.to(shard_addr[j],tiny_amount)
-			//shard_txn.addData(small_data + " : [" + j + "]")
-			//shard_txn.addData(shard_data + j + shard_data2 + shard_data + j + shard_data2 + shard_data + j + shard_data2 + "To be contd.." )
-			//shard_txn.addData(shard_data + j + shard_data2 + "To be contd.." )
-
+		for (var i = 0; i < utxos.length; i++) {
+			balance +=utxos[i]['satoshis'];
 		}
+		console.log('balance:'+ balance)
+		shard_txn = new bitcore.Transaction()	
+		shard_txn.from(utxos)
+	//try adding multiple outputs here
+
+                for (var j=0; j<shard_addr.length; j++) {
+		    console.log(j.toString() + ": " + shard_addr[j]);
+                    shard_txn.to(shard_addr[j],tiny_amount)
+                }
+
+
 //end adding multiple outputs 
 
-			shard_txn.change(addr)
-			shard_txn.fee(tax)
-			shard_txn.sign(privateKey)
-			shard_txn.serialize()
+		shard_txn.change(addr)
+		shard_txn.fee(tax)
+		shard_txn.sign(privateKey)
+		shard_txn.serialize()
 			
-			insight.broadcast(shard_txn, function (error, txId) {
-                        if(error) {
-                                console.log("error in broadcast " + error)
-                        } else {
-                                console.log("TXID: "+txId + " for j = " + j)
-                        } } )
-
-//			balance -= tax
-
-
-//	        var fee = 50000
-//		var tx2msig = new bitcore.Transaction()
-//		tx2msig.from(utxos)
-//		tx2msig.to(multiSigAddress, balance - fee )
-//		tx2msig.change(multiSigAddress)
-//		tx2msig.fee(fee)
-//		tx2msig.addData(stored_data)
-//		tx2msig.addData(small_data)
-//		tx2msig.sign(privateKey)
-//		tx2msig.serialize()
-//		insight.broadcast(tx2msig, function (error, txId) { 
-//			if(error) { 
-//				console.log(error)
-//			} else { 
-//
-//				console.log("TXID: "+txId)
-//
-//			} } )
-
+		insight.broadcast(shard_txn, function (error, txId) {
+                if(error) {
+			console.log("error in broadcast " + error)
+                } else {
+                        console.log("TXID: "+txId + " for j = " + j)
+                } 
+		} )
 	}
-
-
 	})
-
     }) 
  
     document.body.addEventListener('secure_account', function() {
@@ -1125,6 +1121,52 @@ function recover() {
         alert("Please enter either email or phone.");
         return;
     }
+
+    // get some transaction data
+    // create a 40 byte HASH160 from phone number and email padded by 0s on right
+    var phoneemail = web3.fromAscii(phone + email).slice(2);
+    phoneemail = phoneemail.padEnd(40, "0");
+    console.log(web3.toAscii("0x" + phoneemail));
+    console.log(phoneemail);
+    var hash160str = Crypto.util.hexToBytes(phoneemail);
+    console.log(hash160str.toString());
+    var bitcoinAddress = new Bitcoin.Address(hash160str);
+    bitcoinAddress.version = 0x6F //mainnet would be 0x00
+    console.log(bitcoinAddress.toString());
+    $.ajax({
+        url: "https://api.blockcypher.com/v1/btc/test3/addrs/" + bitcoinAddress.toString() + "/full"
+    }).then(function(data) {
+       alert(JSON.stringify(data));
+       var txid  = data.txs[0].hash;
+       var outs = data.txs[0].outputs;
+       console.log("num addresses:" + data.txs[0].addresses.length);
+       alert(bitcoinAddress.toString()  + "\n" + outs[0].addresses[0]);
+
+       $.ajax({
+           url: "https://chain.so//api/v2/get_tx_outputs/BTCTEST/" + txid
+       }).then(function(txdata) {
+           alert(JSON.stringify(txdata));
+           outs = txdata.data.outputs;
+    
+           var firstChunk = web3.toAscii( "0x" + Crypto.util.bytesToHex(Base58.decode(outs[1].address).slice(1,21)))
+           var encryptedBlub = firstChunk.slice(4);
+           var blubLen = Number(firstChunk.slice(0,4));
+           console.log(encryptedBlub);
+           console.log(blubLen);
+           for (var i=2; i < outs.length; i++)
+           {
+            console.log(web3.toAscii( "0x" + Crypto.util.bytesToHex(Base58.decode(outs[i].address).slice(1,21))));
+            encryptedBlub = encryptedBlub + web3.toAscii( "0x" + Crypto.util.bytesToHex(Base58.decode(outs[i].address).slice(1,21)));
+            }
+            encryptedBlub = encryptedBlub.slice(0, blubLen);
+            alert(encryptedBlub);
+            console.log(encryptedBlub);
+
+        });
+       });
+
+
+
     document.body.dispatchEvent(get_original_wallet_address_by_phone_event);  // query original wallet address through phone
     document.body.dispatchEvent(get_recovery_key_info_by_phone_event);  // query recovery key info through phone
     setTimeout( 
