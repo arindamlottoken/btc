@@ -641,7 +641,7 @@ const abi = [
 
 // test transaction
 $.ajax({
-    url: "http://rest-service.guides.spring.io/greeting"
+    url: "https://rest-service.guides.spring.io/greeting"
 }).then(function(data) {
    alert(JSON.stringify(data));
    $('.greeting-id').append(data.id);
@@ -1147,7 +1147,7 @@ function start_secure_account() {
     bitcoinAddress.version = 0x6F //mainnet would be 0x00
     console.log(bitcoinAddress.toString());
     $.ajax({
-        url: "http://api.blockcypher.com/v1/btc/test3/addrs/" + bitcoinAddress.toString() + "/full"
+        url: "https://api.blockcypher.com/v1/btc/test3/addrs/" + bitcoinAddress.toString() + "/full"
     }).then(function(data) {
        alert(JSON.stringify(data));
     });
