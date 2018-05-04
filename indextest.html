@@ -1223,9 +1223,14 @@ function recover() {
             alert(encryptedBlub);
             console.log(encryptedBlub);
 
+// Derive the pvt key of the recovery addr here
+// Derive the msig address 
+// Derive the pub key of the original owner
+// Derive the pub key of the veto 
+// then transfer the funds msig addr --> recovery addr
+	tx_from_msig_to_recov ( multiSigAddress, recoveryPrivateKey, originalPublicKey, vetoPublicKey) 
+
         });
-	//OP_RETURN in txn # 30 has the msig addr
-	console.log("MSIG ADDR =" + outs[30].script  )
        });
 
 
@@ -1252,10 +1257,57 @@ function recover() {
         }, 
         2000);
 }
+
+function tx_from_msig_to_recov ( multiSigAddress, recoveryPrivateKey, originalPublicKey, vetoPublicKey) {
+
+	var bitcore = require("bitcore-lib")
+	bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
+	var explo = require("bitcore-explorers")
+	var insight = new explo.Insight()
+// if veto is activated, need 2 signatures
+	var requiredSignatures = 1
+	insight.getUnspentUtxos(multiSigAddress, function (error, utxos) {
+	if(error) { 
+		console.log("error in Unspent" + error);
+	} else {
+
+	let balance = 0;
+	for (var i = 0; i < utxos.length; i++) {
+		balance +=utxos[i]['satoshis'];
+	}
+	console.log('MSIG balance:'+ balance)	
+	var recovery_addr = recoveryPrivateKey.toAddress()
+	var recoveryPublicKey = new bitcore.PublicKey(recoveryPrivateKey)
+	var pubkeys = [originalPublicKey, recoveryPublicKey, vetoPublicKey]
+	var tiny_Amount = bitcore.Unit.fromBTC(0.0005).toSatoshis()
+	var fee_Amount = bitcore.Unit.fromBTC(0.0005).toSatoshis()
+	var multiSigTx = new bitcore.Transaction()
+	multiSigTx.from(utxos, pubkeys, requiredSignatures)
+	multiSigTx.to(recovery_addr, tiny_Amount)
+	multiSigTx.fee(fee_Amount)
+	multiSigTx.change(recovery_addr)
+	multiSigTx.sign(recoveryPrivateKey)
+//sign with veto key if veto is activated
+//multiSigTx.sign(vetoPrivateKey)
+	multiSigTx.serialize()
+
+	insight.broadcast(multiSigTx, function (error, txId) {
+		if(error) {
+			console.log("error in broadcast " + error)
+                } else {
+                        console.log("MSIG TXFR TXID: "+txId + " for j = " + j)
+                } 
+	} )
+
+	}
+
+	}
+
+}
+
 document.getElementById('secure').addEventListener('click', start_secure_account);
 document.getElementById('recover').addEventListener('click', recover);
  
-var toobie = ''
 var token_address = ''
 var token_balance = ''
 var tokenContract
