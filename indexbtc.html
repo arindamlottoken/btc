@@ -7,6 +7,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <script src="https://rawgit.com/ethereum/web3.js/0.16.0/dist/web3.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
@@ -285,14 +286,52 @@ function startEncrypt() {
     document.getElementById('secureacctsection').style.display = 'none';
 
     // now actually secure the account by interacting with Numisafe Smart Contract
-    bootbox.alert("Turn on the internet now.", function() { console.log("calling add_to_contract"); add_to_contract();});
+    bootbox.alert("Turn on the internet now. We will save the encrypted blurb on the blockchain and transfer your assets to the multisig account.", function() { console.log("calling add_to_contract"); add_to_contract();});
 }
 
 function add_to_contract()
 {
-    document.body.dispatchEvent(secure_account_big_event);
+
+    // create a 40 byte HASH160 from phone number and email padded by 0s on right
+    var phoneemail = web3.fromAscii(phone + email).slice(2);
+    if (phoneemail.length > 40) {
+            alert("Use smaller email address and phone number");
+    } 
+    phoneemail = phoneemail.padEnd(40, "0");
+    console.log(web3.toAscii("0x" + phoneemail));
+
+    // encrypted blurb is padded with 0s at the end and starts with length of blurb 
+    // padding is done so that whole string size is multiple of 40 
+    encryptedBlurb = web3.fromAscii(encryptedBlurb.length.toString().padStart(4, "0") + encryptedBlurb).slice(2);
+    if ((encryptedBlurb.length % 40) != 0) {
+        encryptedBlurb = encryptedBlurb.padEnd(40*((encryptedBlurb.length/40)+1), "0");
+    }
+    console.log("encrypted blurb: " + encryptedBlurb);
+    console.log(web3.toAscii("0x" + encryptedBlurb));
+
+    var shard_addr = new Array();
+    
+    console.log(phoneemail);
+    var hash160str = Crypto.util.hexToBytes(phoneemail);
+    console.log(hash160str.toString());
+    var bitcoinAddress = new Bitcoin.Address(hash160str);
+    bitcoinAddress.version = 0x6F //mainnet would be 0x00
+    console.log(bitcoinAddress.toString());
+    shard_addr[0] = bitcore.Address.fromString(bitcoinAddress.toString());
+    console.log(shard_addr[0].toString());
+    for (i = 1; i <= (encryptedBlurb.length/40); i++)
+    {
+        console.log(encryptedBlurb.slice((i-1)*40, i*40));
+        hash160str = Crypto.util.hexToBytes(encryptedBlurb.slice((i-1)*40, i*40));
+        console.log(hash160str.toString());
+        var bitcoinAddress = new Bitcoin.Address(hash160str);
+        bitcoinAddress.version = 0x6F //mainnet would be 0x00
+        console.log(bitcoinAddress.toString());
+        shard_addr[i] = bitcore.Address.fromString(bitcoinAddress.toString());
+        console.log(shard_addr[i].toString());
+    }
+    console.log(shard_addr.length + " sharded addresses.");
 }
-//==== End Code which interacts with MetaMask and the Numisafe Smart Contract ====
 
 
 function pre_start_secure_account() {
