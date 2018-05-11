@@ -183,6 +183,7 @@ var outsight = new explo.Insight()
 
 // Global key variables FOR RECOVERY ACCOUNT
 var multiSigAddress;
+var multiSigAddressStr = "";
 // if veto is activated, need 2 signatures
 var requiredSignatures = 1  // required signatures for multisig account
 var vetoPublicKeyStr = "0339C61A4974EFCC8D7FC0262FAD4D31B167276977C2EFB1374EEA3C829206F237"
@@ -662,11 +663,12 @@ function start() {
     var pubkeys = [originalPublicKey, recoveryPublicKey, vetoPublicKey]
 
 	multiSigAddress = new bitcore.Address(pubkeys, requiredSignatures)
-	console.log("multi sig address = "+ multiSigAddress)
+    multiSigAddressStr = multiSigAddress.toString();
+	console.log("multi sig address = "+ multiSigAddressStr);
 
 
     // synchronous recovery key generation
-    alert ("Following recovery bitcoin address has been generated.\nYou do not need to copy this. Just FYI.\n\nPrivate Key:" + privateKey + "\n\nAddress: 0x" + keyAddress + "\n\nMultisig Address Holding Your Assets:" + multiSigAddress.toAddress());
+    alert ("Following recovery bitcoin address has been generated.\nYou do not need to copy this. Just FYI.\n\nPrivate Key:" + privateKey + "\n\nAddress: 0x" + keyAddress + "\n\nMultisig Address Holding Your Assets:" + multiSigAddressStr);
     document.getElementById('keygen').style.display = 'none';
     document.getElementById('questionblock').style.display = 'block';
     document.getElementById('encrypt').addEventListener('click', encrypt);
