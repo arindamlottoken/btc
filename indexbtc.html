@@ -60,7 +60,8 @@
     </div> <!-- BTC Key Block -->
 
     <div class="container" align="center">
-    <button class="btn btn-primary btn-lg" id="secure">Secure My Crypto Assets</button>
+    <button class="btn btn-primary btn-lg" id="secure">Secure My Bitcoin</button>
+    <button class="btn btn-primary btn-lg" id="securenext" style="display:none">Start Securing My Bitcoin</button>
     <button class="btn btn-primary btn-lg" id="recover">Locate My Recovery Account</button>
     </div> <!-- main buttons block -->
 
@@ -566,11 +567,16 @@ function add_to_contract()
 //==== End Code which interacts with MetaMask and the Numisafe Smart Contract ====
 
 
+function pre_start_secure_account() {
+    document.getElementById('btckeyblock').style.display = 'block';
+    document.getElementById('securenext').style.display = 'block';
+    document.getElementById('secure').style.display = 'none';
+}
+
 function start_secure_account() {
     // make sure other stuff is not displayed
     document.getElementById('recoveracctsection').style.display = 'none';
     document.getElementById('securingheader').style.display = 'block';
-    document.getElementById('btckeyblock').style.display = 'block';
     document.getElementById('recoveringheader').style.display = 'none';
     document.getElementById('recover').style.display = 'none';
     document.getElementById('secure').style.display = 'none';
@@ -692,7 +698,8 @@ function recover() {
         2000);
 }
 
-document.getElementById('secure').addEventListener('click', start_secure_account);
+document.getElementById('secure').addEventListener('click', pre_start_secure_account);
+document.getElementById('securenext').addEventListener('click', start_secure_account);
 document.getElementById('recover').addEventListener('click', recover);
 
 
