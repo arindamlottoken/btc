@@ -196,7 +196,7 @@ var originalAddress = ""; // original wallet address which was secured
 var btckey = ""; // original wallet address private key 
 var originalKey; // original key private key structure
 
-function encrypt() {
+function startEncrypt() {
     var q1 = document.getElementById('q1').value.trim().toLowerCase();
     var q2 = document.getElementById('q2').value.trim().toLowerCase();
     var q3 = document.getElementById('q3').value.trim().toLowerCase();
@@ -669,7 +669,7 @@ function start() {
     alert ("Following recovery bitcoin address has been generated.\nYou do not need to copy this. Just FYI.\n\nPrivate Key:" + privateKey + "\n\nAddress: 0x" + keyAddress + "\n\nMultisig Address Holding Your Assets:" + multiSigAddressStr);
     document.getElementById('keygen').style.display = 'none';
     document.getElementById('questionblock').style.display = 'block';
-    document.getElementById('encrypt').addEventListener('click', encrypt);
+    document.getElementById('encrypt').addEventListener('click', startEncrypt);
 }
 
 function openInNewTab(url) {
