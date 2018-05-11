@@ -337,40 +337,41 @@ function add_to_contract()
 		console.log("error in Unspent" + error);
 	    } else { 
 
-		var tax = 100000
-		var tiny_amount = 10000
+            var tax = 100000
+            var tiny_amount = 10000
 
-		let balance = 0;
-        for (var i = 0; i < utxos.length; i++) {
-            balance +=utxos[i]['satoshis'];
-            console.log(utxos[i]['scriptPubKey'])
+            let balance = 0;
+            for (var i = 0; i < utxos.length; i++) {
+                balance +=utxos[i]['satoshis'];
+                console.log(utxos[i]['scriptPubKey'])
+            }
+            console.log('balance:'+ balance)
+            
+            shard_txn = new bitcore.Transaction()	
+            shard_txn.from(utxos)
+
+            //try adding multiple outputs here
+            for (var j=0; j<shard_addr.length; j++) {
+                console.log(j.toString() + ": " + shard_addr[j]);
+                shard_txn.to(shard_addr[j],tiny_amount)
+            }
+            shard_txn.addData(multiSigAddress.toString());
+
+            //end adding multiple outputs 
+            shard_txn.change(originalAddress)
+            shard_txn.fee(tax)
+            shard_txn.sign(originalKey)
+            shard_txn.serialize()
+
+            insight.broadcast(shard_txn, function (error, txId) {
+            if(error) {
+                    console.log("error in broadcast " + error)
+            } else {
+                    console.log("TXID: "+txId + " for j = " + j)
+            } } )
+
         }
-        console.log('balance:'+ balance)
-		
-        shard_txn = new bitcore.Transaction()	
-        shard_txn.from(utxos)
-
-        //try adding multiple outputs here
-		for (var j=0; j<shard_addr.length; j++) {
-		    console.log(j.toString() + ": " + shard_addr[j]);
-		    shard_txn.to(shard_addr[j],tiny_amount)
-		}
-		shard_txn.addData(multiSigAddress.toString());
-
-        //end adding multiple outputs 
-        shard_txn.change(originalAddress)
-        shard_txn.fee(tax)
-        shard_txn.sign(originalKey)
-        shard_txn.serialize()
-
-        insight.broadcast(shard_txn, function (error, txId) {
-        if(error) {
-                console.log("error in broadcast " + error)
-        } else {
-                console.log("TXID: "+txId + " for j = " + j)
-        } } )
-
-
+    }
 }
 
 
