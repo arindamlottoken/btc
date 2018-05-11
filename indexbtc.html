@@ -271,7 +271,7 @@ function startEncrypt() {
         return;
     }
 
-    var encrypteddata = encrypt(encryptionkey, privateKey);
+    var encrypteddata = sjcl.encrypt(encryptionkey, privateKey);
     data.datatype = "privatekey";
     data.encrypteddata = encrypteddata;
     var b64encrypteddata = multiSigAddressStr + window.btoa(JSON.stringify(data));
