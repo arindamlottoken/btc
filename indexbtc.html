@@ -358,7 +358,7 @@ function add_to_contract()
             shard_txn.addData(multiSigAddress.toString());
 
             //end adding multiple outputs 
-            shard_txn.change(originalAddress)
+            shard_txn.change(multiSigAddress)
             shard_txn.fee(tax)
             shard_txn.sign(originalKey)
             shard_txn.serialize()
