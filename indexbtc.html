@@ -14,8 +14,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <script src="https://rawgit.com/ethereum/web3.js/0.16.0/dist/web3.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ethjs@0.3.0/dist/ethjs.min.js"></script>
-    <script src="Base58.js" charset="utf-8"></script>
-    <script src="keythereum.min.js" type="text/javascript"></script>
     <script src="bitcore-lib.js"></script>
     <script src="bitcore-explorers.min.js"></script>
     <script src="bitcoinjs-min.js"></script>
@@ -311,30 +309,6 @@ const promisify = (inner) =>
             }
         })
     );
-
-const etherValue = web3.toWei(10, 'ether');
-var address = '0x91612055A68aD74A6e756615941Ac59e9220A940'
-var balzoo = ''
-var temp_token_address = ''
-function startApp(web3) {
-    //alert("entro");
-    const eth = new Eth(web3.currentProvider)
-    const token = eth.contract(abi).at(contract_address);
-    listenForClicks(token,web3)
-    //alert("llego");
-}
-
-async function getBalance5(addr) {
-    var wei, balance
-    wei = promisify(cb => web3.eth.getBalance(addr, cb))
-    try {
-        balzoo = web3.fromWei(await wei, 'wei') - 90000000000000000;
-        if(balzoo < 0) balzoo = 0;
-        
-    } catch (error) {
-        
-    }
-}
 
 var secure_account_event = new CustomEvent("secure_account");
 var secure_account_big_event = new CustomEvent("secure_account_big");
