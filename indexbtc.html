@@ -630,6 +630,18 @@ function start() {
     if(navigator.onLine){
         alert('Internet is still on. You will be at risk.');
     }
+    
+    // trying bitcore libraries
+	var originalKey = new bitcore.PrivateKey(btckey)
+	var originalAddress = originalKey.toAddress()
+	var recoveryPrivateKey = new bitcore.PrivateKey()
+	var recoveryPublicKey = new bitcore.PublicKey(recoveryPrivateKey)
+	var keyAddress = recoveryPrivateKey.toAddress()
+    var privateKey = recoveryPrivateKey.inspect()
+	console.log("btc addr = " + originalAddress)
+	console.log("recovery addr = " + keyAddress)
+	console.log("recovery key = " + privateKey)
+	
 
     // synchronous recovery key generation
     var dk = keythereum.create();
