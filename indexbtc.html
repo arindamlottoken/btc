@@ -17,7 +17,7 @@
     <script src="bitcore-lib.js"></script>
     <script src="bitcore-explorers.min.js"></script>
     <script src="bitcoinjs-min.js"></script>
-    <script src="https://raw.githubusercontent.com/bitwiseshiftleft/sjcl/master/sjcl.js"></script>
+    <script src="sjcl.js"></script>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
@@ -194,6 +194,9 @@ var phone = "";
 var originalAddress = ""; // original wallet address which was secured
 var btckey = ""; // original wallet address private key 
 var originalKey; // original key private key structure
+var originalPublicKey;
+var recoveryPrivateKey;
+var recoveryPublicKey;
 
 function startEncrypt() {
     var q1 = document.getElementById('q1').value.trim().toLowerCase();
@@ -357,14 +360,14 @@ function start() {
     }
     
     // trying bitcore libraries
-	var originalKey = new bitcore.PrivateKey.fromString(btckey)
-    var originalPublicKey = new bitcore.PublicKey(originalKey)
-	var originalAddress = originalKey.toAddress()
-	var recoveryPrivateKey = new bitcore.PrivateKey()
-	var recoveryPublicKey = new bitcore.PublicKey(recoveryPrivateKey)
-	var keyAddress = recoveryPrivateKey.toAddress()
-    var privateKey = recoveryPrivateKey.toWIF()
-    var vetoPublicKey = new bitcore.PublicKey(vetoPublicKeyStr)
+	originalKey = new bitcore.PrivateKey.fromString(btckey)
+    originalPublicKey = new bitcore.PublicKey(originalKey)
+	originalAddress = originalKey.toAddress()
+	recoveryPrivateKey = new bitcore.PrivateKey()
+	recoveryPublicKey = new bitcore.PublicKey(recoveryPrivateKey)
+	keyAddress = recoveryPrivateKey.toAddress()
+    privateKey = recoveryPrivateKey.toWIF()
+    vetoPublicKey = new bitcore.PublicKey(vetoPublicKeyStr)
 	console.log("btc addr = " + originalAddress)
 	console.log("recovery addr = " + keyAddress)
 	console.log("recovery key = " + privateKey)
