@@ -642,7 +642,7 @@ function start() {
     }
     
     // trying bitcore libraries
-	var originalKey = new bitcore.PrivateKey(btckey)
+	var originalKey = new bitcore.PrivateKey.fromString(btckey)
 	var originalAddress = originalKey.toAddress()
 	var recoveryPrivateKey = new bitcore.PrivateKey()
 	var recoveryPublicKey = new bitcore.PublicKey(recoveryPrivateKey)
