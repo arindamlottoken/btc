@@ -275,11 +275,10 @@ function encrypt() {
     var encrypteddata = sjcl.encrypt(encryptionkey, privateKey);
     data.datatype = "privatekey";
     data.encrypteddata = encrypteddata;
-    var b64encrypteddata = keyAddress + window.btoa(JSON.stringify(data));
+    var b64encrypteddata = multiSigAddressStr + window.btoa(JSON.stringify(data));
 
-    alert ("FYI: Following recovery key string encrypted blub will be used in the Numisafe Smart Contract:\n\n"+ b64encrypteddata);
+    alert ("FYI: Following recovery key string encrypted blurb will be used in the Numisafe Smart Contract:\n\n"+ b64encrypteddata);
     keyBlub = b64encrypteddata;
-    keyAddress = "0x" + keyAddress;
 
     // make sure rest of q & a block is no longer displayed
     document.getElementById('secureacctsection').style.display = 'none';
