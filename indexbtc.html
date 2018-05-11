@@ -173,13 +173,23 @@
     </div>  <!-- secureacctsection block -->
 
 <script>
+
+// Bitcore variables 
+var bitcore = require("bitcore-lib")
+bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
+var explo = require("bitcore-explorers")
+var insight = new explo.Insight()
+var outsight = new explo.Insight()
+
 // Global key variables FOR RECOVERY ACCOUNT
-var privateKey = "";
-var keyAddress = "";
+var privateKey;
+var keyAddress;
 var keyBlub = "";
 var email = "";
 var phone = "";
 var originalAddress = ""; // original wallet address which was secured
+var btckey = ""; // original wallet address private key 
+var originalKey; // original key private key structure
 
 function encrypt() {
     var q1 = document.getElementById('q1').value.trim().toLowerCase();
