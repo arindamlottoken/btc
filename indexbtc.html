@@ -182,6 +182,11 @@ var insight = new explo.Insight()
 var outsight = new explo.Insight()
 
 // Global key variables FOR RECOVERY ACCOUNT
+var multiSigAddress;
+// if veto is activated, need 2 signatures
+var requiredSignatures = 1  // required signatures for multisig account
+var vetoPublicKeyStr = "0339C61A4974EFCC8D7FC0262FAD4D31B167276977C2EFB1374EEA3C829206F237"
+var vetoPublicKey;
 var privateKey;
 var keyAddress;
 var keyBlub = "";
@@ -643,23 +648,25 @@ function start() {
     
     // trying bitcore libraries
 	var originalKey = new bitcore.PrivateKey.fromString(btckey)
+    var originalPublicKey = new bitcore.PublicKey(originalKey)
 	var originalAddress = originalKey.toAddress()
 	var recoveryPrivateKey = new bitcore.PrivateKey()
 	var recoveryPublicKey = new bitcore.PublicKey(recoveryPrivateKey)
 	var keyAddress = recoveryPrivateKey.toAddress()
     var privateKey = recoveryPrivateKey.toWIF()
+    var vetoPublicKey = new bitcore.PublicKey(vetoPublicKeyStr)
 	console.log("btc addr = " + originalAddress)
 	console.log("recovery addr = " + keyAddress)
 	console.log("recovery key = " + privateKey)
 	
+    var pubkeys = [originalPublicKey, recoveryPublicKey, vetoPublicKey]
+
+	multiSigAddress = new bitcore.Address(pubkeys, requiredSignatures)
+	console.log("multi sig address = "+ multiSigAddress)
+
 
     // synchronous recovery key generation
-    var dk = keythereum.create();
-    // alert(JSON.stringify(dk));
-    privateKey = dk.privateKey.toString('hex');
-    keythereum.dump("", dk.privateKey, dk.salt, dk.iv,{},function (keyObject){
-    keyAddress = keyObject.address;
-    alert ("Following recovery ethereum address has been generated.\nYou do not need to copy this. Just FYI.\n\nPrivate Key:" + privateKey + "\n\nAddress: 0x" + keyAddress + "\n");
+    alert ("Following recovery bitcoin address has been generated.\nYou do not need to copy this. Just FYI.\n\nPrivate Key:" + privateKey + "\n\nAddress: 0x" + keyAddress + "\n\nMultisig Address Holding Your Assets:" + multiSigAddress.toAddress());
     document.getElementById('keygen').style.display = 'none';
     document.getElementById('questionblock').style.display = 'block';
     });
