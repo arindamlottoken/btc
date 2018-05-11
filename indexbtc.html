@@ -647,7 +647,7 @@ function start() {
 	var recoveryPrivateKey = new bitcore.PrivateKey()
 	var recoveryPublicKey = new bitcore.PublicKey(recoveryPrivateKey)
 	var keyAddress = recoveryPrivateKey.toAddress()
-    var privateKey = recoveryPrivateKey.inspect()
+    var privateKey = recoveryPrivateKey.toWIF()
 	console.log("btc addr = " + originalAddress)
 	console.log("recovery addr = " + keyAddress)
 	console.log("recovery key = " + privateKey)
